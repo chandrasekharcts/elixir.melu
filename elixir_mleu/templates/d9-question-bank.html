@@ -1,0 +1,1238 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Elixir Web | Question Bank</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="icon" href="{% static 'images/favicon.png'  %}" type="image/png">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" media="screen"/>
+
+</head>
+<body>
+<div class="main-container">
+    <nav class="navbar navbar-expand justify-content-between fixed-top">
+        <a class="navbar-brand mb-0 h1 d-none d-md-block" href="/dashboard/">
+            <img src="{% static 'images/logo.png' %}" class="navbar-brand-image d-inline-block align-top mr-2" alt="">
+            <small>Elixir <small>v3.0.1</small></small>
+        </a>
+
+        <a class="navbar-brand mb-0 h1 d-none d-md-block">
+            <img src="{% static 'images/newcts.png' %}" class="pb-2">
+        </a>
+
+        <div class="d-flex flex-1 d-block d-md-none">
+            <a href="#" class="sidebar-toggle ml-3">
+                <i data-feather="menu"></i>
+            </a>
+        </div>
+
+        <ul class="navbar-nav d-flex justify-content-end mr-2">
+            <li class="sidebar-nav-item mt-1">
+                <a class="sidebar-nav-link">
+                  <span class="sidebar-nav-name">
+                    <b style="font-family: Arial Rounded MT">{{ user.first_name }} {{ user.last_name }}</b>
+                  </span>
+                </a>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link avatar-with-name" id="navbarDropdownMenuLink" data-toggle="dropdown" href="#">
+                    <img src="{% static 'images/user_icon.png' %}" class="d-inline-block align-top" alt="">
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                    {% if user.email != 'agent' %}
+                    <a class="dropdown-item text-danger" href="/version_history/">Version History</a>
+                    {% endif %}
+                    <a class="dropdown-item text-danger" href="/account/logout/">Logout</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- expand-hover push -->
+    <!-- Sidebar -->
+    <div class="main-sidebar expand-hover push">
+        <ul class="sidebar-nav">
+
+            <!-- Dashboard -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="home"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Dashboard
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+
+            <!-- Reporting -->
+            {% if user.email != 'agent' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/reporting/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="airplay"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Reporting
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- My Task -->
+            {% if user.email == 'agent' or user.email == 'superuser' %}
+            <li class="sidebar-nav-item">
+                <a class="sidebar-nav-link collapsed" data-toggle="collapse" href="#mytask" aria-expanded="false"
+                   aria-controls="example">
+                    <span class="sidebar-nav-icon">
+                        <i data-feather="grid"></i>
+                    </span>
+                    <span class="sidebar-nav-name">
+                        My Tasks
+                    </span>
+                    <span class="sidebar-nav-end">
+                            <i data-feather="chevrons-right" class="nav-collapse-icon"></i>
+                    </span>
+                </a>
+
+                <ul class="sidebar-sub-nav collapse" id="mytask">
+                    <li class="sidebar-nav-item">
+                        <a href="/dashboard/mytasks_up_kc/" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">
+                                <i data-feather="server"></i>
+                                <i data-feather="clipboard"></i>
+                            </span>
+                            <span class="sidebar-nav-name">
+                            Update + Knowledge Test
+                            </span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/dashboard/mytasks_kc/" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">
+                                <i data-feather="clipboard"></i>
+                            </span>
+                            <span class="sidebar-nav-name">
+                                Knowledge Test
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+
+            <!-- Knowledge Test Evaluation -->
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/knowledge-check-evaluation/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="file-text"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Evaluation
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- Divider Start -->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End -->
+
+            <!-- Updates Repository -->
+            {% if user.email != 'agent' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/elixir/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="server"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Updates Repository
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Create New Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-new-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="edit"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create new Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- All Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/all-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="align-justify"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                All Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sent Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sent-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="chevrons-up"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sent Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Pending Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/pending-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="alert-circle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Pending Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Acknowledged Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/acknowledged-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="check-circle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Acknowledged Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+
+            {% if user.email != 'agent' %}
+            <!-- Knowledge Test Repository -->
+            <li class="sidebar-nav-item">
+
+                <a href="/dashboard/conquest/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="clipboard"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Repository
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Question Bank -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/question_bank/" class="sidebar-nav-link active">
+              <span class="sidebar-nav-icon">
+                <i data-feather="briefcase"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Question Bank
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Knowledge Test Result -->
+            <li class="sidebar-nav-item">
+
+                <a href="/dashboard/conquest_response/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="book"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Result
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="file-plus"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create Knowledge Test
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create a Question -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-a-question/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="edit-3"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create a Question
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- All Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/all-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="copy"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                        All Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sent Knowledge Test-->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sent-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="arrow-up-right"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sent Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Pending Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/pending-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="alert-triangle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Pending Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Completed Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/completed-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="check-square"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Completed Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Update Source -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/update_source_type/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="cpu"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Update Source
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Update Type -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/update_type/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="maximize-2"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Update Type
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Users -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/users/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="user"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Users
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sub Process -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sub_process/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="users"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sub Process
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+
+
+            <!-- Divider End-->
+            {% endif %}
+
+            {% if user.email == 'superuser' %}
+            <!-- Add Accounts -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listAccount' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="package"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Add Accounts
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Add Projects -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listProject' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="layers"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Add Projects
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create Admin -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listAdmin' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="award"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create Admin
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-5"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+        </ul>
+    </div>
+    <!-- Sidebar End -->
+
+    <!-- Main-content-aside -->
+    <div class="main-content">
+
+        <div class="main-main-content">
+
+            <div id="loading">
+                <img src="{% static 'images/4105180.gif' %}" class="ajax-loader"/>
+            </div>
+
+            <div class="container-fluid">
+
+                {% if user.email != 'agent'%}
+
+                <div class="row">
+                    <div class="col">
+                        <div class="card mb-grid text-center">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-lg-6 mt-2" align="left">
+                                        <div class="card-header-title"
+                                             style="font-size:11px; font-weight:600; color:#FFFFFF">
+                                            Question Bank
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6" align="right">
+                                        <button data-toggle="modal"
+                                                data-target="#question_upload"
+                                                class="btn btn-sm btn-labeled btn-dark">
+                                    <span class="btn-label">
+                                        <span class="oi oi-cloud-upload" aria-hidden="true"></span>
+                                    </span>
+                                            <span class="btn-text">Upload Questions</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="tab-content">
+
+                                    <div class="tab-pane fade show active" id="card-tab-content-1" role="tabpanel"
+                                         aria-labelledby="card-tab-1" align="left">
+
+                                        <div class="row p-2 ml-1 mr-1"
+                                             style="background-color: #ECEFF1; border-radius: .25rem">
+                                            <div class="col-lg-3" align="left">
+                                                <div class="row">
+                                                    <label class="switch">
+                                                        <input type="checkbox" id="kc_switch" onclick="myFunction()"
+                                                               checked>
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                    <h6 class="ml-1 mt-1" style="font-weight: 600; font-size: 14px">
+                                                        Knowledge Test</h6>
+                                                </div>
+
+                                                <div class="row">
+                                                    <label class="switch">
+                                                        <input type="checkbox" id="up_switch" onclick="switchfn()">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                    <h6 class="ml-1 mt-1" style="font-weight: 600; font-size: 14px">
+                                                        Update + Knowledge
+                                                        Test</h6>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6"></div>
+
+                                            <div class="col-lg-2 mt-2">
+                                                <button class="btn btn-primary" id="send_pkt" onclick="send_kc()">
+                                                  <span class="btn-text pl-5 pr-5">
+                                                    Send Knowledge Test
+                                                  </span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="p-2 mt-2" id="kc_section"
+                                             style="background-color: #E8F5E9; border-radius: .25rem">
+                                            <div class="row mt-1">
+                                                <div class="col-lg-3 mt-1" id="col_sp">
+                                                    <h6 style="font-size:11px; font-weight:600">Sub-Process :</h6>
+                                                    <select name="select" multiple class="form-control js-choice-remove"
+                                                            id="sub_process">
+                                                        {% for sp in sub_process %}
+                                                        <option value="{{ forloop.counter }}">{{sp.sub_process_name}}
+                                                        </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-lg-3 mt-1" id="col_pscore">
+                                                    <h6 style="font-size:11px; font-weight:600">Passing Percentage
+                                                        :</h6>
+                                                    <input type="text" maxlength="3"
+                                                           oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                                                           class="form-control" id="score" aria-describedby="emailHelp"
+                                                           placeholder="Passing Percentage" autocomplete="off">
+                                                </div>
+
+                                                <div class="col-lg-3 mt-1" id="col_max_at">
+                                                    <h6 style="font-size:11px; font-weight:600">Maximum Attempts :</h6>
+                                                    <input type="text" maxlength="1"
+                                                           oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                                                           class="form-control" id="attempts"
+                                                           aria-describedby="emailHelp"
+                                                           placeholder="No of max. Attempts"
+                                                           autocomplete="off">
+                                                </div>
+
+                                                <div class="col-lg-3 mt-1" id="col_val">
+                                                    <h6 style="font-size:11px; font-weight:600">Update Validity :</h6>
+                                                    <input class="form-control mb-2 date-time" type="text" id="validity"
+                                                           placeholder="Validity : dd-mm-yy HH:MM" autocomplete="off">
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-1">
+                                                <div class="col-lg-6">
+                                                    <h6 style="font-size:11px; font-weight:600">Knowledge Test Title
+                                                        :</h6>
+                                                    <div class="form-group">
+                                                        <input type="text" maxlength="25" class="form-control"
+                                                               id="kc_title"
+                                                               aria-describedby="emailHelp"
+                                                               placeholder="Title" autocomplete="off">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="p-2 mt-2" id="update_section"
+                                             style="background-color: #E8F5E9; border-radius: .25rem">
+                                            <div class="row mt-1">
+                                                <div class="col-lg-3 mt-1">
+                                                    <h6 style="font-size:11px; font-weight:600">Update ID :</h6>
+                                                    <select name="select" class="form-control js-choice" id="update_id">
+                                                        <option value="1">-- Select Update Id --</option>
+                                                        {% for up in update_id %}
+                                                        <option value="{{ forloop.counter }}">{{ up.id }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card mb-grid mt-1">
+                                            <div class="table-responsive-md">
+                                                <table class="table table-actions table-striped table-hover mb-0"
+                                                       id="table1"
+                                                       data-table>
+                                                    <thead>
+                                                    <tr>
+                                                        <th scope="col" style="font-size:11px; font-weight:600">
+                                                            Selection
+                                                        </th>
+                                                        <th scope="col" style="font-size:11px; font-weight:600">
+                                                            Id
+                                                        </th>
+                                                        <th scope="col" style="font-size:11px; font-weight:600">
+                                                            Timestamp
+                                                        </th>
+                                                        <th scope="col" style="font-size:11px; font-weight:600">
+                                                            Creator
+                                                        </th>
+                                                        <th scope="col" style="font-size:11px; font-weight:600">
+                                                            Question
+                                                        </th>
+                                                        <th scope="col" style="font-size:11px; font-weight:600">
+                                                            Question_Type
+                                                        </th>
+                                                        <th scope="col" style="font-size:11px; font-weight:600">
+                                                            Pass_Percentage
+                                                        </th>
+                                                        <th scope="col"
+                                                            class="sorting_desc_disabled sorting_asc_disabled"
+                                                            style="font-size:11px; font-weight:600"></th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="questions_list">
+                                                    {% for ques in questions %}
+                                                    <tr>
+                                                        <td><label class="switch">
+                                                            <input type="checkbox">
+                                                            <span class="slider round"></span>
+                                                        </label>
+                                                        </td>
+                                                        <td>{{ques.id}}</td>
+                                                        <td>{{ques.timestamp}}</td>
+                                                        <td>{{ques.creator}}</td>
+                                                        <td>{{ques.question}}</td>
+                                                        <td>{{ques.type}}</td>
+                                                        <td>{{ques.passing_percentage}}%</td>
+                                                        <td>
+                                                            <button type="button" data-toggle="modal"
+                                                                    data-target="#question_details"
+                                                                    class="btn btn-sm btn-info"
+                                                                    onclick="modal_open({{ques.id}})">
+                                                                Details
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal: modalCart -->
+                <div class="modal fade" id="question_details" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl" style="max-width: 900px" role="document">
+                        <div class="modal-content">
+                            <!--Header-->
+                            <div class="modal-header">
+                                <div class="row ml-1 mr-1 pr-2 pb-2"
+                                     style="background-color: rgba(232, 234, 246 ,0.25); width:100%; border-radius: .25rem">
+
+                                    <div class="col-lg-12">
+                                        <div class="row" align="right">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+
+                                        <div>
+                                            <h6 class="card-title mb-0"
+                                                style="font-size: 11px; font-weight: 600; color: #424242">
+                                                Created On</h6>
+                                            <h3 id="q_timestamp"
+                                                style="font-size: 15px; font-weight: 600; color: #000000"></h3>
+                                        </div>
+
+                                        <div>
+                                            <h6 class="card-title mb-0"
+                                                style="font-size: 11px; font-weight: 600; color: #4E342E">Question
+                                                Type</h6>
+                                            <h3 id="q_type"
+                                                style="font-size: 15px; font-weight: 600; color: #3E2723"></h3>
+                                        </div>
+                                    </div>
+
+                                    <div class="row ml-1 mr-1 p-3"
+                                         style="background-color: rgba(250, 250, 250 , 1); width:100%; border-radius: .25rem">
+
+                                        <div class="col-lg-12" align="right">
+                                            <span style="height: 10px; width: 10px; background-color: #4CAF50; border-radius: 50%; display: inline-block"></span>
+                                            <span class="mr-2"
+                                                  style="font-size: 11px; font-weight: 600">Correct Answer</span>
+                                            <span style="height: 10px; width: 10px; background-color: #b71c1c; border-radius: 50%; display: inline-block"></span>
+                                            <span style="font-size: 11px; font-weight: 600">Incorrect Answer</span>
+                                        </div>
+
+                                        <div class="col-lg-12">
+
+                                            <div class="mb-2">
+                                                <h6 class="card-title mb-0"
+                                                    style="font-size: 11px; font-weight: 600; color: #424242">
+                                                    Question</h6>
+                                                <h3 id="q_question"
+                                                    style="font-size: 15px; font-weight: 600; color: #263238"></h3>
+                                            </div>
+
+                                            <div class="mt-2">
+                                                <h6 class="card-title mb-0 mt-3"
+                                                    style="font-size: 11px; font-weight: 600; color: #4E342E">
+                                                    Answer</h6>
+                                            </div>
+
+                                            <div itemtype="options" id="q_options">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!--Body-->
+                            <div class="modal-body" id="question_users_table_div">
+                                <span>Users attempt List</span>
+
+                                <table class="table table-actions table-striped table-hover mb-0"
+                                       id="question_users_table"
+                                       data-table>
+                                    <thead>
+                                    <tr>
+                                        <th style="font-size:11px; font-weight:600">#</th>
+                                        <th style="font-size:11px; font-weight:600">Emp_ID</th>
+                                        <th style="font-size:11px; font-weight:600">Emp_Name</th>
+                                        <th style="font-size:11px; font-weight:600">Emp_Email</th>
+                                        <th style="font-size:11px; font-weight:600">Emp_Answer</th>
+                                        <th style="font-size:11px; font-weight:600">Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="question_users_table_body">
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <!--Footer-->
+                            <div class="modal-footer">
+                                <label style="font-size:10px; font-weight:600"> Elixir v3.0.1</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal: modalCart -->
+
+                <!-- Modal: modalCart -->
+                <div class="modal fade" id="question_upload" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl" style="max-width: 900px" role="document">
+                        <div class="modal-content">
+                            <!--Header-->
+                            <div class="modal-header">
+                                <div class="row ml-1 mr-1 pr-2 pb-2"
+                                     style="background-color: rgba(232, 234, 246 ,0.25); width:100%; border-radius: .25rem">
+
+                                    <div class="col-lg-12">
+                                        <div class="row" align="right">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="row ml-1 mr-1 mb-1">
+                                            <div class="col-lg-4 pl-2 pb-1" style="background-color:#F5F5F5">
+                                                <label style="color:#000000; font-size:11px; font-weight:600">1.
+                                                    Download Excel-sheet for Bulk
+                                                    Uploading of Questions</label>
+                                                <br>
+                                                <form method="post" action="{% url 'download_questions_template' %}"
+                                                      target="_blank">
+                                                    {% csrf_token %}
+                                                    <button class="btn btn-sm btn-labeled btn-dark">
+                                    <span class="btn-label">
+                                        <span class="oi oi-cloud-download" aria-hidden="true"></span>
+                                    </span>
+                                                        <span class="btn-text">Download</span>
+                                                    </button>
+                                                </form>
+                                            </div>
+
+                                            <div class="col-lg-8">
+                                                <form action="{% url 'upload_questions_file'%}" method="post"
+                                                      enctype="multipart/form-data">
+                                                    {% csrf_token %}
+                                                    <div class="row">
+                                                        <div class="col-lg-6 pl-2" style="background-color:#fcfcfc">
+                                                            <label style="color:#000000; font-size:11px; font-weight:600">2.
+                                                                Select the Filled
+                                                                Excel-sheet</label>
+                                                            <br>
+                                                            <input type="file" name="questions_file"
+                                                                   style="color:#000000; font-size:16px; font-weight:400"
+                                                                   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                                                        </div>
+                                                        <div class="col-lg-6 pl-2 pb-1"
+                                                             style="background-color:#E8F5E9">
+                                                            <label style="color:#000000; font-size:11px; font-weight:600">3.
+                                                                Click here to
+                                                                upload the selected Excel-Sheet</label>
+                                                            <br>
+                                                            <button class="btn btn-sm btn-labeled btn-primary"
+                                                                    id="upload_questions"
+                                                                    type="submit"
+                                                                    disabled>
+                                    <span class="btn-label">
+                                        <span class="oi oi-cloud-upload" aria-hidden="true"></span>
+                                    </span>
+                                                                <span class="btn-text">Upload</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal: modalCart -->
+
+                {% else %}
+
+                <div class="row mb-2 mt-1">
+
+                    <div class="col">
+                        <h6 style="font-weight:600">**YOU ARE NOT AUTHORIZED TO ACCESS THIS WEB PAGE AS PER THE DOT
+                            COMPLIANCE**</h6>
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- If you prefer jQuery these are the required scripts -->
+<script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/vendor.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/timer.js' %}"></script>
+
+<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'js/buttons.flash.min.js' %}"></script>
+<!--<script src="{% static 'js/jszip.min.js' %}"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="{% static 'js/pdfmake.min.js' %}"></script>
+<script src="{% static 'js/vfs_fonts.js' %}"></script>
+<script src="{% static 'js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'js/buttons.print.min.js' %}"></script>
+<script src="{% static 'js/charts/Chart.js' %}"></script>
+<script src="{% static 'js/charts/chartjs-plugin-labels.js' %}"></script>
+<script src="{% static 'js/feather.min.js' %}"></script>
+
+<script>
+
+    var choices = new Choices('.js-choice-remove', {
+        removeItemButton: true,
+      });
+
+    flatpickr(".date-time", {
+        allowInput: true,
+        enableTime: true,
+        dateFormat: "d-m-Y H:i",
+        minDate: "today",
+    });
+
+    window.onload = myFunction();
+
+    function myFunction() {
+        var checkBox = document.getElementById("kc_switch");
+        var kc_col1 = document.getElementById("col_sp");
+        var kc_col2 = document.getElementById("col_val");
+        var up_text = document.getElementById("update_section");
+        if (checkBox.checked == true) {
+            kc_col1.style.display = "block";
+            kc_col2.style.display = "block";
+            up_text.style.display = "none";
+            $("#up_switch").prop('checked', false);
+        } else {
+            kc_col1.style.display = "none";
+            kc_col2.style.display = "none";
+            up_text.style.display = "block";
+            $("#up_switch").prop('checked', true);
+        }
+    }
+
+    function switchfn() {
+    var checkBox = document.getElementById("up_switch");
+    if (checkBox.checked == true) {
+        $("#kc_switch").prop('checked', false);
+    } else {
+        $("#kc_switch").prop('checked', true);
+    }
+    myFunction();
+}
+
+    $(document).ready(function () {
+        $('input:file').change(
+            function () {
+                if ($(this).val()) {
+                    $('#upload_questions').attr('disabled', false);
+                }
+            }
+        );
+    });
+
+    $(document).ready(function () {
+        $('#upload_questions').click(function() {
+            $('#loading').show();
+        });
+    });
+
+    flatpickr(".date-default", {
+        allowInput: true,
+        dateFormat: "d-m-Y",
+        mode: "range",
+        maxDate: "today",
+    });
+
+    $(document).ready(function () {
+        $('#table1').DataTable({
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "order": [[ 1, "desc" ]],
+            dom: 'Blfrtip',
+            "sScrollX" : "100%",
+            buttons: [
+                {
+                    extend: 'pdf',
+                    className: 'btn btn-sm btn-danger mt-2 ml-2'
+                },
+                {
+                    extend: 'copy',
+                    className: 'btn btn-sm btn-dark mt-2'
+                },
+                {
+                    extend: 'csv',
+                    className: 'btn btn-sm btn-secondary mt-2'
+                },
+                {
+                    extend: 'excel',
+                    className: 'btn btn-sm btn-primary mt-2'
+                },
+                {
+                    extend: 'print',
+                    className: 'btn btn-sm btn-info mt-2'
+                }
+        ]
+        });
+    });
+
+
+function modal_open(id) {
+    $('#loading').show();
+    $.ajax({
+        type: "POST",
+        url: "{% url 'question_data' %}",
+        data: {
+            question_id: id,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function (data) {
+            $('#loading').hide();
+            options = data['options'];
+
+            options_arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                       'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+            $('#q_question').text(data['question']);
+            $('#q_timestamp').text(data['timestamp']);
+            $('#q_type').text(data['question_type']);
+            document.getElementById('q_options').innerHTML = "";
+            if(data['question_type'] != "Subjective")
+            {
+                for (var i = 0; i < options.length; i++) {
+                    if (options[i].answer == "yes") {
+                        var label = document.createElement('label');
+                        label.setAttribute("style", "font-weight : 600; font-size: 14px; color: #4CAF50");
+                        label.innerHTML = options_arr[i] + ". " + options[i].option;
+                        var nxtline = document.createElement('br');
+                        document.getElementById('q_options').appendChild(label);
+                        document.getElementById('q_options').appendChild(nxtline);
+                    } else {
+                        var label = document.createElement('label');
+                        label.setAttribute("style", "font-weight : 600; font-size: 14px; color: #b71c1c");
+                        label.innerHTML = options_arr[i] + ". " + options[i].option;
+                        var nxtline = document.createElement('br');
+                        document.getElementById('q_options').appendChild(label);
+                        document.getElementById('q_options').appendChild(nxtline);
+                    }
+                }
+            }
+            else
+            {
+                var label = document.createElement('label');
+                label.setAttribute("style", "font-weight : 600; font-size: 14px; color: #4CAF50");
+                label.innerHTML = options[0].answer;
+                document.getElementById('q_options').appendChild(label);
+            }
+
+            if(data['users_list']!= [])
+            {
+                $('#question_users_table_div').html('');
+                $('#question_users_table_div')
+                .append('<span>' + "Users attempt List" + '</span>' +
+                            '<table class="table table-actions table-striped table-hover mb-0" id="question_users_table" data-table>' +
+                                '<thead>' +
+                                    '<tr>' +
+                                        '<th style="font-size:11px; font-weight:600">' + "#"            + '</th>' +
+                                        '<th style="font-size:11px; font-weight:600">' + "Emp_ID"       + '</th>' +
+                                        '<th style="font-size:11px; font-weight:600">' + "Emp_Name"     + '</th>' +
+                                        '<th style="font-size:11px; font-weight:600">' + "Emp_Email"    + '</th>' +
+                                        '<th style="font-size:11px; font-weight:600">' + "Emp_Answer"   + '</th>' +
+                                        '<th style="font-size:11px; font-weight:600">' + "Status"       + '</th>' +
+                                    '</tr>' +
+                                '</thead>' +
+                                '<tbody id="question_users_table_body">' + '</tbody>' +
+                            '</table>');
+
+                ques_user_list = data['users_list'];
+                for (var i = 0; i < ques_user_list.length; i++) {
+
+                    $('#question_users_table_body').append('<tr>' +
+                        '<td>' + (i + 1) + '</td>' +
+                        '<td>' + ques_user_list[i].emp_id + '</td>' +
+                        '<td>' + ques_user_list[i].emp_name + '</td>' +
+                        '<td>' + ques_user_list[i].emp_email + '</td>' +
+                        '<td>' + ques_user_list[i].emp_answer + '</td>' +
+                        '<td>' + ques_user_list[i].emp_status + '</td>' +
+                        '</tr>');
+
+                }
+
+                $('#question_users_table').DataTable({
+                    retrieve: true,
+                    "searching": false,
+                    "paging": false,
+                    "ordering": false,
+                    "info": false,
+                    dom: 'Blfrtip',
+                    "xScrollX" : "100%",
+                    buttons: [
+                        {
+                            extend: 'pdf',
+                            className: 'btn btn-sm btn-danger mt-2 ml-2'
+                        },
+                        {
+                            extend: 'copy',
+                            className: 'btn btn-sm btn-dark mt-2'
+                        },
+                        {
+                            extend: 'csv',
+                            className: 'btn btn-sm btn-secondary mt-2'
+                        },
+                        {
+                            extend: 'excel',
+                            className: 'btn btn-sm btn-primary mt-2'
+                        },
+                        {
+                            extend: 'print',
+                            className: 'btn btn-sm btn-info mt-2'
+                        }
+                            ]
+                });
+            }
+        }
+    });
+}
+
+function hideLoader() {
+    $('#loading').hide();
+}
+
+$(window).ready(hideLoader);
+
+    function send_kc()
+    {
+        var kc_checkBox = document.getElementById("kc_switch").checked;
+
+        $score = $('#score').val();
+        $attempts = $('#attempts').val();
+        $kc_title = $('#kc_title').val();
+        $validity = $('#validity').val();
+
+        var sp_dropdown = document.getElementById('sub_process');
+        $sub_process = [];
+        for (var i = 0; i < sp_dropdown.options.length; i++) {
+          if (sp_dropdown.options[i].selected) {
+            $sub_process.push(sp_dropdown.options[i].text);
+          }
+        }
+
+        $up_id = $("#update_id option:selected").text();
+
+        questions = [];
+        document.getElementById("questions_list").querySelectorAll('tr').forEach((e) => {
+            if(e.querySelectorAll('td')[0].querySelectorAll('input')[0].checked == true)
+                {
+                    questions.push(e.querySelectorAll('td')[1].innerHTML)
+                }
+        });
+
+        if (kc_checkBox == true && $sub_process.length == 0) {
+            alert('Please Select the Sub Process');
+            return;
+        } else if (kc_checkBox == true && $validity.length != 16) {
+            alert('Please Select the Validity Date & Time');
+            return;
+        } else if ($score == "") {
+            alert('Please Enter the Passing');
+            return;
+        } else if ($attempts == "") {
+            alert('Please Enter the Max no. of attempts');
+            return;
+        } else if ($kc_title == "") {
+            alert('Please Enter the Knowledge Test Title');
+            return;
+        } else if (kc_checkBox == false && $up_id == "-- Select Update Id --") {
+            alert('Please Select the Update Id');
+            return;
+        } else if (questions.length == 0) {
+            alert('Please Select atleast 1 Question');
+            return;
+        } else {
+                $('#loading').show();
+
+                if (kc_checkBox == false) {
+                    $sub_process = [];
+                    $validity    = "";
+                }
+                else
+                {
+                    $up_id = "na";
+                }
+
+                save_question($up_id, $sub_process, $validity, $score, $attempts, $kc_title, questions)
+        }
+    }
+
+    function save_question(up_id, sub_process, validity, score, attempts, kc_title, questions) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'send_kc_ques' %}",
+            data: {
+                up_id: up_id,
+                sub_process: JSON.stringify(sub_process),
+                validity: validity,
+                score: score,
+                attempts: attempts,
+                kc_title: kc_title,
+                questions: JSON.stringify(questions),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                 $('#loading').hide();
+                alert(data['message']);
+                window.location = "";
+            }
+        });
+    }
+
+</script>
+
+</body>
+</html>

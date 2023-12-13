@@ -1,0 +1,2390 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Elixir Web | Dashboard</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="icon" href="{% static 'images/favicon.png'  %}" type="image/png">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" media="screen"/>
+</head>
+
+<body>
+<div class="main-container">
+    <nav class="navbar navbar-expand justify-content-between fixed-top">
+
+        <a class="navbar-brand mb-0 h1 d-none d-md-block" href="/dashboard/">
+            <img src="{% static 'images/logo.png' %}" class="navbar-brand-image d-inline-block align-top" alt="">
+            <small>Elixir <small>v3.0.1</small> </small>
+        </a>
+
+        <a class="navbar-brand mb-0 h1 d-none d-md-block">
+            <img src="{% static 'images/newcts.png' %}" class="pb-2">
+        </a>
+
+        <div class="d-flex flex-1 d-block d-md-none">
+            <a href="#" class="sidebar-toggle ml-3">
+                <i data-feather="menu"></i>
+            </a>
+        </div>
+
+        <ul class="navbar-nav d-flex justify-content-end mr-2">
+
+            <li class="sidebar-nav-item mt-1">
+                <a class="sidebar-nav-link">
+                  <span class="sidebar-nav-name">
+                    <b style="font-family: Arial Rounded MT">{{ user.first_name }} {{ user.last_name }}</b>
+                  </span>
+                </a>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link avatar-with-name" id="navbarDropdownMenuLink" data-toggle="dropdown" href="#">
+                    <img src="{% static 'images/user_icon.png' %}" class="d-inline-block align-top" alt="">
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                    {% if user.email != 'agent' %}
+                    <a class="dropdown-item text-danger" href="/version_history/">Version History</a>
+                    {% endif %}
+                    <a class="dropdown-item text-danger" href="/account/logout/">Logout</a>
+                </div>
+            </li>
+        </ul>
+
+    </nav>
+
+    <!-- expand-hover push -->
+    <!-- Sidebar -->
+    <div class="main-sidebar expand-hover push">
+        <ul class="sidebar-nav">
+
+            <!-- Dashboard -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/" class="sidebar-nav-link active">
+              <span class="sidebar-nav-icon">
+                <i data-feather="home"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Dashboard
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+
+            <!-- Reporting -->
+            {% if user.email != 'agent' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/reporting/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="airplay"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Reporting
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- My Task -->
+            {% if user.email == 'agent' or user.email == 'superuser' %}
+            <li class="sidebar-nav-item">
+                <a class="sidebar-nav-link collapsed" data-toggle="collapse" href="#mytask" aria-expanded="false"
+                   aria-controls="example">
+                    <span class="sidebar-nav-icon">
+                        <i data-feather="grid"></i>
+                    </span>
+                    <span class="sidebar-nav-name">
+                        My Tasks
+                    </span>
+                    <span class="sidebar-nav-end">
+                            <i data-feather="chevrons-right" class="nav-collapse-icon"></i>
+                    </span>
+                </a>
+
+                <ul class="sidebar-sub-nav collapse" id="mytask">
+                    <li class="sidebar-nav-item">
+                        <a href="/dashboard/mytasks_up_kc/" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">
+                                <i data-feather="server"></i>
+                                <i data-feather="clipboard"></i>
+                            </span>
+                            <span class="sidebar-nav-name">
+                            Update + Knowledge Test
+                            </span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/dashboard/mytasks_kc/" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">
+                                <i data-feather="clipboard"></i>
+                            </span>
+                            <span class="sidebar-nav-name">
+                                Knowledge Test
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+
+            <!-- Knowledge Test Evaluation -->
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/knowledge-check-evaluation/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="file-text"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Evaluation
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- Divider Start -->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End -->
+
+            <!-- Updates Repository -->
+            {% if user.email != 'agent' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/elixir/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="server"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Updates Repository
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Create New Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-new-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="edit"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create new Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- All Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/all-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="align-justify"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                All Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sent Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sent-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="chevrons-up"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sent Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Pending Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/pending-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="alert-circle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Pending Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Acknowledged Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/acknowledged-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="check-circle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Acknowledged Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+
+            {% if user.email != 'agent' %}
+            <!-- Knowledge Test Repository -->
+            <li class="sidebar-nav-item">
+
+                <a href="/dashboard/conquest/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="clipboard"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Repository
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Question Bank -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/question_bank/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="briefcase"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Question Bank
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Knowledge Test Result -->
+            <li class="sidebar-nav-item">
+
+                <a href="/dashboard/conquest_response/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="book"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Result
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="file-plus"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create Knowledge Test
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create a Question -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-a-question/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="edit-3"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create a Question
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- All Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/all-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="copy"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                        All Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sent Knowledge Test-->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sent-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="arrow-up-right"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sent Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Pending Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/pending-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="alert-triangle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Pending Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Completed Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/completed-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="check-square"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Completed Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Update Source -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/update_source_type/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="cpu"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Update Source
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Update Type -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/update_type/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="maximize-2"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Update Type
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Users -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/users/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="user"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Users
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sub Process -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sub_process/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="users"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sub Process
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+
+
+            <!-- Divider End-->
+            {% endif %}
+
+            {% if user.email == 'superuser' %}
+            <!-- Add Accounts -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listAccount' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="package"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Add Accounts
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Add Projects -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listProject' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="layers"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Add Projects
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create Admin -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listAdmin' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="award"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create Admin
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-5"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+        </ul>
+    </div>
+    <!-- Sidebar End -->
+
+    <!-- Main-content-aside -->
+    <div class="main-content">
+
+        <div id="loading">
+            <img src="{% static 'images/4105180.gif' %}" class="ajax-loader"/>
+        </div>
+
+        <div class="main-main-content">
+
+            <div class="container-fluid">
+
+                <div class="p-2" style="background-color: #1A237E; border-radius: .25rem" align="center">
+                    <h6 class="pt-1" style="font-size:14px; font-weight: 600; color: #FFFFFF">MLEU - Update
+                        Management System</h6>
+                </div>
+
+                {% if user.email != 'agent' %}
+                <div class="p-2 mt-2"
+                     style="background-color: rgba(227,242,253 ,0.3); border-style: solid; border-color: rgba(38,50,56 ,0.01); border-width: 2px; border-radius: .25rem">
+
+                    <h6 class="mt-1 ml-1 mr-1 mb-3" style="font-size:16px; font-weight: 600">Elixir MLEU
+                        Statistics</h6>
+
+                    <div class="row mb-2">
+
+                        <div class="col-lg-3 mt-1">
+                            <div class="form-group">
+                                <h6 style="font-size:11px; font-weight:600">Pick Date Range</h6>
+                                <input id="vertical_statistics_date_picker" class="form-control mb-2 date-default"
+                                       type="text"
+                                       placeholder="Pick Date Range" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2 mt-4">
+                            <button type="button" class="btn btn-sm btn-success pl-5 pr-5"
+                                    id="btn_vertical_statistics_filter" onclick="vertical_statistics_filter()">Apply
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-2">
+
+                        <div class="col-lg-12 d-flex">
+
+                            <div class="card  text-white text-center w-100 mt-1"
+                                 style="background-image: url('{% static 'images/updates_stats.jpg' %}'); background-position:center;
+	                                    background-repeat:no-repeat; background-size:cover;  border-style: solid; border-color: #ffffff; border-width: 4px; border-radius: .5rem; color: #000000">
+
+                                <div style=" background-image: linear-gradient(to bottom, rgba(255, 255, 255, 1),rgba(255, 255, 255, 0.8))">
+                                    <div class="d-flex flex-row align-items-center h-100">
+
+                                        <div class="card-body" align="left" style="color: #000000">
+                                            <div class="card-info-title"
+                                                 style="font-size:15px; font-weight:600">
+                                                <i class="mr-2" data-feather="server"></i>
+                                                Updates Statistics
+                                            </div>
+
+                                            <div class="row mt-4" align="left">
+
+                                                <div class="col-lg-3 pr-2">
+                                                    <h3 class="card-title mb-0" id="t_updates"
+                                                        style="font-size: 50px; color: #00897B">
+                                                        0</h3>
+
+                                                    <h6 style="font-size: 12px; font-weight: 600; color: #000000">Rolled
+                                                        Out</h6>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h3 class="card-title mb-0" id="p_updates"
+                                                        style="font-size: 50px; color: #f44336">
+                                                        0</h3>
+
+
+                                                    <h6 style="font-size: 12px; font-weight: 600; color: #000000">
+                                                        Pending Acknowledgement</h6>
+                                                </div>
+
+                                                <div class="col-lg-3 pl-2 pr-2">
+                                                    <h3 class="card-title mb-0" id="ack_updates"
+                                                        style="font-size: 50px; color: #4CAF50">
+                                                        0</h3>
+
+                                                    <h6 style="font-size: 12px; font-weight: 600; color: #000000">
+                                                        Acknowledged</h6>
+                                                </div>
+
+                                                <div class="col-lg-3 pl-2 pr-2">
+                                                    <h3 class="card-title mb-0" id="updates_awareness_percentage"
+                                                        style="font-size: 50px; color: #01579B">
+                                                        0.0%</h3>
+
+                                                    <h6 style="font-size: 12px; font-weight: 600; color: #000000">Users
+                                                        Acknolwedged</h6>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="mt-5 mb-2"
+                                                 style="font-size:14px; font-weight:600">
+                                                <i class="mr-2" data-feather="bar-chart"></i>
+                                                Statistics Graphical Representation
+                                            </div>
+
+                                            <div class="row mt-2 ml-1">
+
+                                                <div class="col-lg-2 mt-2" data-toggle="modal"
+                                                     data-target="#acc_update_details">
+                                                    <a class="row pt-2 card mr-1"
+                                                       style="background-image: linear-gradient(to right, #2A2A72, #009FFD); border-radius: .25rem; color: #FFFFFF">
+
+                                                        <div class="task-head col-lg-12" style="text-align: left">
+                                                            <h6 style="font-size:11px; font-weight: 600">Account Level
+                                                                Statistics</h6>
+                                                        </div>
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-lg-2 mt-2" data-toggle="modal"
+                                                     data-target="#proj_update_details">
+                                                    <a class="row pt-2 card mr-1"
+                                                       style="background-image: linear-gradient(to right, #A4508B, #5F0A87); border-radius: .25rem; color: #FFFFFF">
+
+                                                        <div class="task-head col-lg-12" style="text-align: left">
+                                                            <h6 style="font-size:11px; font-weight: 600">Projects level
+                                                                Statistics</h6>
+                                                        </div>
+
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-lg-2 pl-3 pr-3 mt-2" data-toggle="modal"
+                                                     data-target="#subprocess_update_details">
+                                                    <a class="row pt-2 card mr-1"
+                                                       style="background-image: linear-gradient(to right, #233329, #63D471); border-radius: .25rem; color: #FFFFFF">
+
+                                                        <div class="task-head col-lg-12" style="text-align: left">
+                                                            <h6 style="font-size:11px; font-weight: 600">Sub Process
+                                                                level
+                                                                Statistics</h6>
+                                                        </div>
+
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-lg-2 mt-2" data-toggle="modal"
+                                                     data-target="#source_update_details">
+                                                    <a class="row pt-2 card mr-1"
+                                                       style="background-image: linear-gradient(to right, #A40606, #D98324); border-radius: .25rem; color: #FFFFFF">
+
+                                                        <div class="task-head col-lg-12" style="text-align: left">
+                                                            <h6 style="font-size:11px; font-weight: 600">Update Source
+                                                                Wise</h6>
+                                                        </div>
+
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-lg-2 mt-2" data-toggle="modal"
+                                                     data-target="#type_update_details">
+                                                    <a class="row pt-2 card mr-1"
+                                                       style="background-image: linear-gradient(to right, #D99058, #F8DE7E); border-radius: .25rem; color: #FFFFFF">
+
+                                                        <div class="task-head col-lg-12" style="text-align: left">
+                                                            <h6 style="font-size:11px; font-weight: 600">Update Type
+                                                                Wise</h6>
+                                                        </div>
+
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-12 d-flex mt-3">
+
+                            <div class="card  text-white text-center w-100 mt-1"
+                                 style="background-image: url('{% static 'images/kc_statistics.jpg' %}'); background-position:center;
+	                                    background-repeat:no-repeat; background-size:cover;  border-style: solid; border-color: #ffffff; border-width: 4px; border-radius: .5rem; color: #000000">
+
+                                <div style=" background-image: linear-gradient(to bottom, rgba(255, 255, 255, 1),rgba(255, 255, 255, 0.8))">
+                                    <div class="d-flex flex-row align-items-center h-100">
+
+                                        <div class="card-body" align="left" style="color: #000000">
+                                            <div class="card-info-title"
+                                                 style="font-size:15px; font-weight:600">
+                                                <i class="mr-2" data-feather="clipboard"></i>
+                                                Knowledge Test Statistics
+                                            </div>
+
+                                            <div class="row mt-4" align="left">
+
+                                                <div class="col-lg-2 pr-2">
+                                                    <h3 class="card-title mb-0" id="t_kc"
+                                                        style="font-size: 50px; color: #00897B">
+                                                        0</h3>
+
+                                                    <h6 style="font-size: 12px; font-weight: 600; color: #000000">Rolled
+                                                        out</h6>
+                                                </div>
+
+                                                <div class="col-lg-2">
+                                                    <h3 class="card-title mb-0" id="p_kc"
+                                                        style="font-size: 50px; color: #f44336">
+                                                        0</h3>
+
+
+                                                    <h6 style="font-size: 12px; font-weight: 600; color: #000000">
+                                                        Pending Completion</h6>
+                                                </div>
+
+                                                <div class="col-lg-2 pl-2 pr-2">
+                                                    <h3 class="card-title mb-0" id="ack_kc"
+                                                        style="font-size: 50px; color: #4CAF50">
+                                                        0</h3>
+
+                                                    <h6 style="font-size: 12px; font-weight: 600; color: #000000">
+                                                        Completed</h6>
+                                                </div>
+
+                                                <div class="col-lg-3 pl-2 pr-2">
+                                                    <h3 class="card-title mb-0" id="c_rate_kc"
+                                                        style="font-size: 50px; color: #01579B">
+                                                        0.0%</h3>
+
+                                                    <h6 style="font-size: 12px; font-weight: 600; color: #000000">Users
+                                                        Attempted</h6>
+                                                </div>
+
+                                                <div class="col-lg-3 pl-2 pr-2">
+                                                    <h3 class="card-title mb-0" id="pass_rate_kc"
+                                                        style="font-size: 50px; color: #795548">
+                                                        0.0%</h3>
+
+                                                    <h6 style="font-size: 12px; font-weight: 600; color: #000000">Users
+                                                        Passed</h6>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="mt-5 mb-2"
+                                                 style="font-size:14px; font-weight:600">
+                                                <i class="mr-2" data-feather="bar-chart"></i>
+                                                Statistics Graphical Representation
+                                            </div>
+
+                                            <div class="row mt-2 ml-1">
+
+                                                <div class="col-lg-2 mt-2" align="center" data-toggle="modal"
+                                                     data-target="#acc_kc_details">
+                                                    <a class="row pt-2 card mr-1"
+                                                       style="background-image: linear-gradient(to right, #36096D, #37D5D6); border-radius: .25rem; color: #FFFFFF">
+
+                                                        <div class="task-head col-lg-12" style="text-align: left">
+                                                            <h6 style="font-size:11px; font-weight: 600">Account Level
+                                                                Statistics</h6>
+                                                        </div>
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-lg-2 mt-2" align="center" data-toggle="modal"
+                                                     data-target="#proj_kc_details">
+                                                    <a class="row pt-2 card mr-1"
+                                                       style="background-image: linear-gradient(to right, #6B0F1A, #B91372); border-radius: .25rem; color: #FFFFFF">
+
+                                                        <div class="task-head col-lg-12" style="text-align: left">
+                                                            <h6 style="font-size:11px; font-weight: 600">Projects level
+                                                                Statistics</h6>
+                                                        </div>
+
+                                                    </a>
+                                                </div>
+
+                                                <div class="col-lg-2 mt-2" align="center" data-toggle="modal"
+                                                     data-target="#subprocess_kc_details">
+                                                    <a class="row pt-2 card mr-1"
+                                                       style="background-image: linear-gradient(to right, #0BAB64, #3BB78F); border-radius: .25rem; color: #FFFFFF">
+
+                                                        <div class="task-head col-lg-12" style="text-align: left">
+                                                            <h6 style="font-size:11px; font-weight: 600">Sub Process
+                                                                level
+                                                                Statistics</h6>
+                                                        </div>
+
+                                                    </a>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                {% endif %}
+
+                {% if user.email == 'agent' or user.email == 'superuser' %}
+                <div class="p-2 mt-2"
+                     style="background-color: #F6F0EA; border-radius: .25rem">
+
+                    <h6 class="mt-1 ml-1 mr-1 mb-2" style="font-size:16px; font-weight: 600">Your Statistics</h6>
+
+                    <div class="row ml-1 mr-1">
+
+                        <div class="col-lg-2">
+                            <a href="/dashboard/mytasks_up_kc/" class="row pt-2 card mb-1 mt-1 mr-1"
+                               style="background-image: linear-gradient(to right, #1e3c72, #2a5298); border-radius: .25rem; color: #FFFFFF">
+
+                                <div class="task-head col-lg-12" style="text-align: left">
+                                    <h6 style="font-size:11px; font-weight: 600">Pending Updates</h6>
+                                </div>
+
+                                <div class="task-head col-lg-12" style="text-align: left">
+                                    <h6 id="user_pending_up" style="font-size:20px; font-weight: 600">0</h6>
+                                </div>
+
+                            </a>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <a href="/dashboard/mytasks_kc/" class="row pt-2 card mb-1 mt-1 mr-1"
+                               style="background-image: linear-gradient(to right, #485563, #29323c); border-radius: .25rem; color: #FFFFFF">
+
+                                <div class="task-head col-lg-12" style="text-align: left">
+                                    <h6 style="font-size:11px; font-weight: 600">Pending Knowledge Tests</h6>
+                                </div>
+
+                                <div class="task-head col-lg-12" style="text-align: left">
+                                    <h6 id="user_pending_kc" style="font-size:20px; font-weight: 600">0</h6>
+                                </div>
+
+                            </a>
+                        </div>
+
+                        <div class="col-lg-3 mt-1">
+                            <div class="form-group">
+                                <h6 style="font-size:11px; font-weight:600">Pick Date Range</h6>
+                                <input id="user_statistics_date_picker" class="form-control mb-2 date-default"
+                                       type="text"
+                                       placeholder="Pick Date Range" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2 mt-4">
+                            <button type="button" class="btn btn-sm btn-success pl-5 pr-5"
+                                    id="btn_user_statistics_filter" onclick="user_statistics_filter()">Apply
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <div class="row my-2">
+
+                        <div class="col-md-6 py-1">
+                            <div class="card" style="border-radius: .5rem">
+                                <div class="row ml-1 mt-3 mr-1">
+                                    <div class="col-lg-12 mb-1 ml-1 mr-1">
+                                        <h6 style="font-weight: 600">Updates Statistics</h6>
+                                    </div>
+
+                                    <div class="row ml-2 mr-2" style="width: 100%">
+
+                                        <div class="col-lg-2" align="center">
+                                            <h6 style="font-size: 11px; font-weight: 600; color: #004D40">Received</h6>
+                                            <h3 class="card-title" id="user_t_updates" style="color: #00897B">
+                                                0</h3>
+                                        </div>
+
+                                        <div class="col-lg-2" align="center">
+                                            <h6 style="font-size: 11px; font-weight: 600; color: #b71c1c">Pending</h6>
+                                            <h3 class="card-title" id="user_p_updates" style="color: #f44336">
+                                                0</h3>
+                                        </div>
+
+                                        <div class="col-lg-3" align="center">
+                                            <h6 style="font-size: 11px; font-weight: 600; color: #1B5E20">
+                                                Acknowledged</h6>
+                                            <h3 class="card-title" id="user_ack_updates" style="color: #4CAF50">
+                                                0</h3>
+                                        </div>
+
+                                        <div class="col-lg-2" align="center">
+                                            <h6 style="font-size: 11px; font-weight: 600; color: #BF360C">Expired</h6>
+                                            <h3 class="card-title" id="user_exp_updates" style="color: #E65100">
+                                                0</h3>
+                                        </div>
+
+                                        <div class="col-lg-3" align="center">
+                                            <h6 style="font-size: 11px; font-weight: 600; color: #01579B">
+                                                Understood</h6>
+                                            <h3 class="card-title" id="user_updates_awareness_percentage"
+                                                style="color: #3F51B5">0.0%</h3>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="card-body" id="user_updates_chart_div" style="height: 300px">
+                                    <canvas id="user_updates_chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 py-1">
+                            <div class="card" style="border-radius: .5rem">
+                                <div class="row ml-1 mt-3 mr-1">
+                                    <div class="col-lg-12 mb-1 ml-1 mr-1">
+                                        <h6 style="font-weight: 600">Knowledge Tests Statistics</h6>
+                                    </div>
+
+                                    <div class="row ml-2 mr-2" style="width: 100%">
+
+                                        <div class="col-lg-2" align="center">
+                                            <h6 style="font-size: 11px; font-weight: 600; color: #004D40">Received</h6>
+                                            <h3 class="card-title mb-0" id="user_t_kc" style="color: #00897B">0</h3>
+                                        </div>
+
+                                        <div class="col-lg-3" align="center">
+                                            <h6 class="ml-4 mr-4 pl-1 pr-1"
+                                                style="font-size: 11px; font-weight: 600; color: #b71c1c">Pending</h6>
+                                            <h3 class="card-title mb-0" id="user_p_kc" style="color: #e53935">0</h3>
+                                        </div>
+
+                                        <div class="col-lg-2" align="center">
+                                            <h6 style="font-size: 11px; font-weight: 600; color: #1B5E20">Completed</h6>
+                                            <h3 class="card-title mb-0" id="user_ack_kc" style="color: #4CAF50">0</h3>
+                                        </div>
+
+                                        <div class="col-lg-2" align="center">
+                                            <h6 style="font-size: 11px; font-weight: 600; color: #BF360C">Expired</h6>
+                                            <h3 class="card-title mb-0" id="user_exp_kc" style="color: #E65100">0</h3>
+                                        </div>
+
+                                        <div class="col-lg-3" align="center">
+                                            <h6 class="pl-3 pr-3"
+                                                style="font-size: 11px; font-weight: 600; color: #01579B">Avg.
+                                                Score</h6>
+                                            <h3 class="card-title mb-0" id="user_kc_passing_percentage"
+                                                style="color: #3F51B5">0.0%</h3>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="card-body" id="user_kc_chart_div" style="height: 300px">
+                                    <canvas id="user_kc_chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 py-1">
+                            <div class="card" style="border-radius: .5rem">
+                                <div class="row ml-1 mt-3 mr-1">
+                                    <div class="col-lg-12 mb-1 ml-1 mr-1">
+                                        <h6 style="font-weight: 600">Knowledge Tests Performance Graph</h6>
+                                    </div>
+
+                                </div>
+
+                                <div class="card-body" id="user_kc_performance_chart_div" style="height: 300px">
+                                    <canvas id="user_kc_performance_chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                {% endif %}
+
+                <!-- Modal: modalCart -->
+                <div class="modal fade" id="acc_update_details" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl" style="max-width: 900px" role="document">
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body" style="overflow-y: hidden; height: 500px">
+                                <div class="row">
+                                    <div>
+
+                                        <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+
+                                        <div class="row ml-1 mt-3 mr-1">
+                                            <div class="col-lg-5 mb-3">
+                                                <h6 class="pt-2" style="font-weight: 600; font-size: 15px">Updates
+                                                    Statistics : Account Level</h6>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="col-lg-5">
+                                                    <a href="/dashboard/elixir/" target="_blank"
+                                                       class="row pt-2 card mb-1 mt-1 mr-1"
+                                                       style="background-image: linear-gradient(to right, #028090, #00BFB2); border-radius: .25rem; color: #FFFFFF">
+
+                                                        <div class="task-head col-lg-12" style="text-align: center">
+                                                            <h6 style="font-size:11px; font-weight: 600">Details</h6>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="row ml-2 mr-2" style="width: 100%" align="center">
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #004D40">Rolled
+                                                        Out</h6>
+                                                    <h3 class="card-title mb-0" id="acc_t_updates"
+                                                        style="color: #00897B">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #b71c1c">
+                                                        Pending
+                                                        Acknowledgement</h6>
+                                                    <h3 class="card-title mb-0" id="acc_p_updates"
+                                                        style="color: #e53935">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #1B5E20">
+                                                        Acknowledged</h6>
+                                                    <h3 class="card-title mb-0" id="acc_ack_updates"
+                                                        style="color: #4CAF50">0</h3>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #01579B">
+                                                        Users Acknowledged</h6>
+                                                    <h3 class="card-title mb-0"
+                                                        id="acc_updates_awareness_percentage"
+                                                        style="color: #3F51B5">0.0%</h3>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="card-body" id="acc_updates_chart_div" style="height: 300px">
+                                            <canvas id="acc_updates_chart"></canvas>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--Footer-->
+                            <div class="modal-footer">
+                                <label style="font-size:10px; font-weight:600"> Elixir v3.0.1</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal: modalCart -->
+
+                <!-- Modal: modalCart -->
+                <div class="modal fade" id="proj_update_details" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl" style="max-width: 900px" role="document">
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body" style="overflow-y: hidden; height: 500px">
+                                <div class="row">
+                                    <div>
+                                        <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+
+                                        <div class="row ml-1 mt-3 mr-1">
+                                            <div class="col-lg-5 mb-3">
+                                                <h6 class="pt-2" style="font-weight: 600; font-size: 15px">Updates
+                                                    Statistics : Project Level</h6>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="col-lg-5">
+                                                    <a href="/dashboard/elixir/" target="_blank"
+                                                       class="row pt-2 card mb-1 mt-1 mr-1"
+                                                       style="background-image: linear-gradient(to right, #028090, #00BFB2); border-radius: .25rem; color: #FFFFFF">
+
+                                                        <div class="task-head col-lg-12" style="text-align: center">
+                                                            <h6 style="font-size:11px; font-weight: 600">Details</h6>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="row ml-2 mr-2" style="width: 100%" align="center">
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #004D40">Rolled
+                                                        Out</h6>
+                                                    <h3 class="card-title mb-0" id="proj_t_updates"
+                                                        style="color: #00897B">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #b71c1c">
+                                                        Pending Acknowledgement</h6>
+                                                    <h3 class="card-title mb-0" id="proj_p_updates"
+                                                        style="color: #e53935">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #1B5E20">
+                                                        Acknowledged</h6>
+                                                    <h3 class="card-title mb-0" id="proj_ack_updates"
+                                                        style="color: #4CAF50">0</h3>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #01579B">
+                                                        Users Acknowledged</h6>
+                                                    <h3 class="card-title mb-0"
+                                                        id="proj_updates_awareness_percentage"
+                                                        style="color: #3F51B5">0.0%</h3>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="card-body" id="proj_updates_chart_div" style="height: 300px">
+                                            <canvas id="proj_updates_chart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--Footer-->
+                            <div class="modal-footer">
+                                <label style="font-size:10px; font-weight:600"> Elixir v3.0.1</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal: modalCart -->
+
+                <!-- Modal: modalCart -->
+                <div class="modal fade" id="subprocess_update_details" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl" style="max-width: 900px" role="document">
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body" style="overflow-y: hidden; height: 500px">
+                                <div class="row">
+                                    <div>
+
+                                        <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+
+                                        <div class="row ml-1 mt-3 mr-1">
+                                            <div class="col-lg-5 mb-3">
+                                                <h6 class="pt-2" style="font-weight: 600; font-size: 15px">Updates
+                                                    Statistics : SubProcess Level</h6>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-2">
+                                                <div class="col-lg-5">
+                                                    <a href="/dashboard/elixir/" target="_blank"
+                                                       class="row pt-2 card mb-1 mt-1 mr-1"
+                                                       style="background-image: linear-gradient(to right, #028090, #00BFB2); border-radius: .25rem; color: #FFFFFF">
+
+                                                        <div class="task-head col-lg-12" style="text-align: center">
+                                                            <h6 style="font-size:11px; font-weight: 600">Details</h6>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="row ml-2 mr-2" style="width: 100%" align="center">
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #004D40">Rolled
+                                                        Out</h6>
+                                                    <h3 class="card-title mb-0" id="sp_t_updates"
+                                                        style="color: #00897B">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #b71c1c">
+                                                        Pending Acknowledgement</h6>
+                                                    <h3 class="card-title mb-0" id="sp_p_updates"
+                                                        style="color: #e53935">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #1B5E20">
+                                                        Acknowledged</h6>
+                                                    <h3 class="card-title mb-0" id="sp_ack_updates"
+                                                        style="color: #4CAF50">0</h3>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #01579B">
+                                                        Users Acknowledged</h6>
+                                                    <h3 class="card-title mb-0"
+                                                        id="sp_updates_awareness_percentage"
+                                                        style="color: #3F51B5">0.0%</h3>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="card-body" id="sp_updates_chart_div" style="height: 300px">
+                                            <canvas id="sp_updates_chart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--Footer-->
+                            <div class="modal-footer">
+                                <label style="font-size:10px; font-weight:600"> Elixir v3.0.1</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal: modalCart -->
+
+                <!-- Modal: modalCart -->
+                <div class="modal fade" id="source_update_details" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl" style="max-width: 900px" role="document">
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body" style="overflow-y: hidden; height: 500px">
+                                <div class="row">
+                                    <div>
+
+                                        <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+
+                                        <div class="row ml-1 mt-3 mr-1">
+                                            <div class="col-lg-6 mb-3">
+                                                <h6 class="pt-2" style="font-weight: 600; font-size: 15px">Updates
+                                                    Statistics : Update Source Wise</h6>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="col-lg-5">
+                                                    <a href="/dashboard/elixir/" target="_blank"
+                                                       class="row pt-2 card mb-1 mt-1 mr-1"
+                                                       style="background-image: linear-gradient(to right, #028090, #00BFB2); border-radius: .25rem; color: #FFFFFF">
+
+                                                        <div class="task-head col-lg-12" style="text-align: center">
+                                                            <h6 style="font-size:11px; font-weight: 600">Details</h6>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="row ml-2 mr-2" style="width: 100%" align="center">
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #004D40">Rolled
+                                                        Out</h6>
+                                                    <h3 class="card-title mb-0" id="source_t_updates"
+                                                        style="color: #00897B">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #b71c1c">
+                                                        Pending Acknowledgement</h6>
+                                                    <h3 class="card-title mb-0" id="source_p_updates"
+                                                        style="color: #e53935">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #1B5E20">
+                                                        Acknowledged</h6>
+                                                    <h3 class="card-title mb-0" id="source_ack_updates"
+                                                        style="color: #4CAF50">0</h3>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #01579B">
+                                                        Users Acknowledged</h6>
+                                                    <h3 class="card-title mb-0"
+                                                        id="source_updates_awareness_percentage"
+                                                        style="color: #3F51B5">0.0%</h3>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="card-body" id="source_updates_chart_div" style="height: 300px">
+                                            <canvas id="source_updates_chart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--Footer-->
+                            <div class="modal-footer">
+                                <label style="font-size:10px; font-weight:600"> Elixir v3.0.1</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal: modalCart -->
+
+                <!-- Modal: modalCart -->
+                <div class="modal fade" id="type_update_details" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl" style="max-width: 900px" role="document">
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body" style="overflow-y: hidden; height: 500px">
+                                <div class="row">
+                                    <div>
+
+                                        <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+
+                                        <div class="row ml-1 mt-3 mr-1">
+                                            <div class="col-lg-6 mb-3">
+                                                <h6 class="pt-2" style="font-weight: 600; font-size:15px">Updates
+                                                    Statistics : Update Type Wise</h6>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="col-lg-5">
+                                                    <a href="/dashboard/elixir/" target="_blank"
+                                                       class="row pt-2 card mb-1 mt-1 mr-1"
+                                                       style="background-image: linear-gradient(to right, #028090, #00BFB2); border-radius: .25rem; color: #FFFFFF">
+
+                                                        <div class="task-head col-lg-12" style="text-align: center">
+                                                            <h6 style="font-size:11px; font-weight: 600">Details</h6>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="row ml-2 mr-2" style="width: 100%" align="center">
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #004D40">Rolled
+                                                        Out</h6>
+                                                    <h3 class="card-title mb-0" id="type_t_updates"
+                                                        style="color: #00897B">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #b71c1c">
+                                                        Pending Acknowledgement</h6>
+                                                    <h3 class="card-title mb-0" id="type_p_updates"
+                                                        style="color: #e53935">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #1B5E20">
+                                                        Acknowledged</h6>
+                                                    <h3 class="card-title mb-0" id="type_ack_updates"
+                                                        style="color: #4CAF50">0</h3>
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #01579B">
+                                                        Users Acknowledged</h6>
+                                                    <h3 class="card-title mb-0"
+                                                        id="type_updates_awareness_percentage"
+                                                        style="color: #3F51B5">0.0%</h3>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="card-body" id="type_updates_chart_div" style="height: 300px">
+                                            <canvas id="type_updates_chart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--Footer-->
+                            <div class="modal-footer">
+                                <label style="font-size:10px; font-weight:600"> Elixir v3.0.1</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal: modalCart -->
+
+                <!-- Modal: modalCart -->
+                <div class="modal fade" id="acc_kc_details" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl" style="max-width: 900px" role="document">
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body" style="overflow-y: hidden; height: 500px">
+                                <div class="row">
+                                    <div>
+
+                                        <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+
+                                        <div class="row ml-1 mt-3 mr-1">
+                                            <div class="col-lg-6 mb-3">
+                                                <h6 class="pt-2" style="font-weight: 600; font-size: 15px">Knowledge
+                                                    Tests Statistics : Account Wise</h6>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="col-lg-5">
+                                                    <a href="/dashboard/conquest/" target="_blank"
+                                                       class="row pt-2 card mb-1 mt-1 mr-1"
+                                                       style="background-image: linear-gradient(to right, #028090, #00BFB2); border-radius: .25rem; color: #FFFFFF">
+
+                                                        <div class="task-head col-lg-12" style="text-align: center">
+                                                            <h6 style="font-size:11px; font-weight: 600">Details</h6>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="row ml-2 mr-2" style="width: 100%" align="center">
+
+                                                <div class="col-lg-2">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #004D40">Rolled
+                                                        Out</h6>
+                                                    <h3 class="card-title mb-0" id="acc_t_kc" style="color: #00897B">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-2">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #b71c1c">
+                                                        Pending Completion</h6>
+                                                    <h3 class="card-title mb-0" id="acc_p_kc" style="color: #e53935">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-2">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #1B5E20">
+                                                        Completed</h6>
+                                                    <h3 class="card-title mb-0" id="acc_ack_kc" style="color: #4CAF50">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-2">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #01579B">
+                                                        Users Attempted</h6>
+                                                    <h3 class="card-title mb-0" id="acc_kc_comp_rate"
+                                                        style="color: #3F51B5">0.0%</h3>
+                                                </div>
+
+                                                <div class="col-lg-2">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #01579B">
+                                                        Users Passed</h6>
+                                                    <h3 class="card-title mb-0" id="acc_avg_passing_rate_kc"
+                                                        style="color: #3F51B5">0.0%</h3>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="card-body" id="acc_kc_chart_div" style="height: 300px">
+                                            <canvas id="acc_kc_chart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--Footer-->
+                            <div class="modal-footer">
+                                <label style="font-size:10px; font-weight:600"> Elixir v3.0.1</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal: modalCart -->
+
+                <!-- Modal: modalCart -->
+                <div class="modal fade" id="proj_kc_details" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl" style="max-width: 900px" role="document">
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body" style="overflow-y: hidden; height: 500px">
+                                <div class="row">
+                                    <div>
+
+                                        <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+
+                                        <div class="row ml-1 mt-3 mr-1">
+                                            <div class="col-lg-6 mb-3">
+                                                <h6 class="pt-2" style="font-weight: 600; font-size: 15px">Knowledge
+                                                    Tests Statistics : Project Wise</h6>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="col-lg-5">
+                                                    <a href="/dashboard/conquest/" target="_blank"
+                                                       class="row pt-2 card mb-1 mt-1 mr-1"
+                                                       style="background-image: linear-gradient(to right, #028090, #00BFB2); border-radius: .25rem; color: #FFFFFF">
+
+                                                        <div class="task-head col-lg-12" style="text-align: center">
+                                                            <h6 style="font-size:11px; font-weight: 600">Details</h6>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="row ml-2 mr-2" style="width: 100%" align="center">
+
+                                                <div class="col-lg-2">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #004D40">Rolled
+                                                        Out</h6>
+                                                    <h3 class="card-title mb-0" id="proj_t_kc" style="color: #00897B">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-2">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #b71c1c">
+                                                        Pending Completion</h6>
+                                                    <h3 class="card-title mb-0" id="proj_p_kc" style="color: #e53935">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-2">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #1B5E20">
+                                                        Completed</h6>
+                                                    <h3 class="card-title mb-0" id="proj_ack_kc" style="color: #4CAF50">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-2">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #01579B">Users
+                                                        Attempted</h6>
+                                                    <h3 class="card-title mb-0" id="proj_kc_comp_rate"
+                                                        style="color: #3F51B5">0.0%</h3>
+                                                </div>
+
+                                                <div class="col-lg-2">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #01579B">Users
+                                                        Passed</h6>
+                                                    <h3 class="card-title mb-0" id="proj_avg_passing_rate_kc"
+                                                        style="color: #3F51B5">0.0%</h3>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="card-body" id="proj_kc_chart_div" style="height: 300px">
+                                            <canvas id="proj_kc_chart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--Footer-->
+                            <div class="modal-footer">
+                                <label style="font-size:10px; font-weight:600"> Elixir v3.0.1</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal: modalCart -->
+
+                <!-- Modal: modalCart -->
+                <div class="modal fade" id="subprocess_kc_details" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl" style="max-width: 900px" role="document">
+                        <div class="modal-content">
+                            <!--Body-->
+                            <div class="modal-body" style="overflow-y: hidden; height: 500px">
+                                <div class="row">
+                                    <div>
+
+                                        <button type="button" class="close m-2" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+
+                                        <div class="row ml-1 mt-3 mr-1">
+                                            <div class="col-lg-6 mb-3">
+                                                <h6 class="pt-2" style="font-weight: 600; font-size: 15px">Knowledge
+                                                    Tests Statistics : Sub Process Wise</h6>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-3">
+                                                <div class="col-lg-5">
+                                                    <a href="/dashboard/conquest/" target="_blank"
+                                                       class="row pt-2 card mb-1 mt-1 mr-1"
+                                                       style="background-image: linear-gradient(to right, #028090, #00BFB2); border-radius: .25rem; color: #FFFFFF">
+
+                                                        <div class="task-head col-lg-12" style="text-align: center">
+                                                            <h6 style="font-size:11px; font-weight: 600">Details</h6>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="row ml-2 mr-2" style="width: 100%" align="center">
+
+                                                <div class="col-lg-2">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #004D40">Rolled
+                                                        Out</h6>
+                                                    <h3 class="card-title mb-0" id="sp_t_kc" style="color: #00897B">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-2 ">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #b71c1c">
+                                                        Pending Completion</h6>
+                                                    <h3 class="card-title mb-0" id="sp_p_kc" style="color: #e53935">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-2">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #1B5E20">
+                                                        Completed</h6>
+                                                    <h3 class="card-title mb-0" id="sp_ack_kc" style="color: #4CAF50">
+                                                        0</h3>
+                                                </div>
+
+                                                <div class="col-lg-2">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #01579B">Users
+                                                        Attempted</h6>
+                                                    <h3 class="card-title mb-0" id="sp_kc_comp_rate"
+                                                        style="color: #3F51B5">0.0%</h3>
+                                                </div>
+
+                                                <div class="col-lg-2">
+                                                    <h6 style="font-size: 11px; font-weight: 600; color: #01579B">Users
+                                                        Passed</h6>
+                                                    <h3 class="card-title mb-0" id="sp_avg_passing_rate_kc"
+                                                        style="color: #3F51B5">0.0%</h3>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="card-body" id="sp_kc_chart_div" style="height: 300px">
+                                            <canvas id="sp_kc_chart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--Footer-->
+                            <div class="modal-footer">
+                                <label style="font-size:10px; font-weight:600"> Elixir v3.0.1</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal: modalCart -->
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- If you prefer jQuery these are the required scripts -->
+<script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/vendor.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/timer.js' %}"></script>
+
+<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'js/charts/Chart.js' %}"></script>
+
+<script>
+    var colors = ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d'];
+
+    function user_statistics(data) {
+
+        if(data['user_pending_up_count'])
+            $('#user_pending_up').text(data['user_pending_up_count']);
+
+        if(data['user_pending_kc_count'])
+        $('#user_pending_kc').text(data['user_pending_kc_count']);
+
+        $('#user_t_updates').text(data['user_t_up_count']);
+        $('#user_p_updates').text(data['user_p_up_count']);
+        $('#user_ack_updates').text(data['user_ack_up_count']);
+        $('#user_exp_updates').text(data['user_exp_up_count']);
+        $('#user_updates_awareness_percentage').text(data['user_up_awareness_percentage'].toFixed(2) + "%");
+
+        $('#user_t_kc').text(data['user_t_kc_count']);
+        $('#user_p_kc').text(data['user_p_kc_count']);
+        $('#user_ack_kc').text(data['user_ack_kc_count']);
+        $('#user_exp_kc').text(data['user_exp_kc_count']);
+        $('#user_kc_passing_percentage').text(data['user_kc_avg_score'].toFixed(2) + "%");
+
+        $('#user_updates_chart').remove();
+        $('#user_updates_chart_div').append('<canvas id="user_updates_chart"></canvas>');
+
+        $('#user_kc_chart').remove();
+        $('#user_kc_chart_div').append('<canvas id="user_kc_chart"></canvas>');
+
+        $('#user_kc_performance_chart').remove();
+        $('#user_kc_performance_chart_div').append('<canvas id="user_kc_performance_chart"></canvas>');
+
+        var user_updates_chBar = document.getElementById("user_updates_chart");
+        if (user_updates_chBar) {
+            new Chart(user_updates_chBar, {
+                type: 'bar',
+                data: {
+                    labels: ["Total", "Pending", "Acknowledged", "Expired"],
+                    datasets: [
+                        {
+                            data: data['user_up_stats'],
+                            backgroundColor: [
+                    'rgba(0,150,136 ,1)',
+                    'rgba(183,28,28 ,1)',
+                    'rgba(76,175,80 ,1)',
+                    'rgba(230,81,0 ,1)'
+                ]
+            }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            barPercentage: 0.4,
+                            categoryPercentage: 0.5
+              }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+              }]
+                    }
+                }
+            });
+        }
+
+        var user_kc_chBar = document.getElementById("user_kc_chart");
+        if (user_kc_chBar) {
+            new Chart(user_kc_chBar, {
+                type: 'bar',
+                data: {
+                    labels: ["Total", "Pending", "Acknowledged", "Expired"],
+                    datasets: [
+                        {
+                            data: data['user_kc_stats'],
+                            backgroundColor: [
+                    'rgba(0,150,136 ,1)',
+                    'rgba(183,28,28 ,1)',
+                    'rgba(76,175,80 ,1)',
+                    'rgba(230,81,0 ,1)'
+                ]
+            }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            barPercentage: 0.4,
+                            categoryPercentage: 0.5
+              }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+              }]
+                    }
+                }
+            });
+        }
+
+        var user_kc_performance_chLine = document.getElementById("user_kc_performance_chart");
+        var chartData = {
+            labels: data['user_kc_list'],
+            datasets: [{
+                    label: 'Passing Score',
+                    data: data['user_kc_pass_percentage_list'],
+                    backgroundColor: 'transparent',
+                    borderColor: colors[0],
+                    borderWidth: 4,
+                    pointBackgroundColor: colors[0]
+          },
+                {
+                    label: 'Yours Score',
+                    data: data['user_kc_score_percentage_list'],
+                    backgroundColor: colors[3],
+                    borderColor: colors[1],
+                    borderWidth: 4,
+                    pointBackgroundColor: colors[1]
+           }
+          ]
+        };
+        if (user_kc_performance_chLine) {
+            new Chart(user_kc_performance_chLine, {
+                type: 'line',
+                data: chartData,
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: false
+                            }
+              }]
+                    },
+                    legend: {
+                        display: true,
+                        labels: {
+                            fontColor: '#156237',
+                            usePointStyle: true
+                        }
+                    },
+                    responsive: true
+                }
+            });
+        }
+
+    }
+
+    function vertical_statistics(data) {
+
+        $('#t_updates').text(data['t_updates']);
+        $('#p_updates').text(data['p_updates']);
+        $('#ack_updates').text(data['ack_updates']);
+        $('#updates_awareness_percentage').text(data['updates_awareness_percentage'].toFixed(2) + "%");
+
+        $('#t_kc').text(data['t_kc']);
+        $('#p_kc').text(data['p_kc']);
+        $('#ack_kc').text(data['ack_kc']);
+        $('#c_rate_kc').text(data['kc_completion_rate'].toFixed(2) + "%");
+        $('#pass_rate_kc').text(data['kc_passing_rate'].toFixed(2) + "%");
+
+        $('#acc_t_updates').text(data['t_updates']);
+        $('#acc_p_updates').text(data['p_updates']);
+        $('#acc_ack_updates').text(data['ack_updates']);
+        $('#acc_updates_awareness_percentage').text(data['updates_awareness_percentage'].toFixed(2) + "%");
+
+        $('#proj_t_updates').text(data['t_updates']);
+        $('#proj_p_updates').text(data['p_updates']);
+        $('#proj_ack_updates').text(data['ack_updates']);
+        $('#proj_updates_awareness_percentage').text(data['updates_awareness_percentage'].toFixed(2) + "%");
+
+        $('#sp_t_updates').text(data['t_updates']);
+        $('#sp_p_updates').text(data['p_updates']);
+        $('#sp_ack_updates').text(data['ack_updates']);
+        $('#sp_updates_awareness_percentage').text(data['updates_awareness_percentage'].toFixed(2) + "%");
+
+        $('#source_t_updates').text(data['t_updates']);
+        $('#source_p_updates').text(data['p_updates']);
+        $('#source_ack_updates').text(data['ack_updates']);
+        $('#source_updates_awareness_percentage').text(data['updates_awareness_percentage'].toFixed(2) + "%");
+
+        $('#type_t_updates').text(data['t_updates']);
+        $('#type_p_updates').text(data['p_updates']);
+        $('#type_ack_updates').text(data['ack_updates']);
+        $('#type_updates_awareness_percentage').text(data['updates_awareness_percentage'].toFixed(2) + "%");
+
+        $('#acc_t_kc').text(data['t_kc']);
+        $('#acc_p_kc').text(data['p_kc']);
+        $('#acc_ack_kc').text(data['ack_kc']);
+        $('#acc_kc_comp_rate').text(data['kc_completion_rate'].toFixed(2) + "%");
+        $('#acc_avg_passing_rate_kc').text(data['kc_passing_rate'].toFixed(2) + "%");
+
+        $('#proj_t_kc').text(data['t_kc']);
+        $('#proj_p_kc').text(data['p_kc']);
+        $('#proj_ack_kc').text(data['ack_kc']);
+        $('#proj_kc_comp_rate').text(data['kc_completion_rate'].toFixed(2) + "%");
+        $('#proj_avg_passing_rate_kc').text(data['kc_passing_rate'].toFixed(2) + "%");
+
+        $('#sp_t_kc').text(data['t_kc']);
+        $('#sp_p_kc').text(data['p_kc']);
+        $('#sp_ack_kc').text(data['ack_kc']);
+        $('#sp_kc_comp_rate').text(data['kc_completion_rate'].toFixed(2) + "%");
+        $('#sp_avg_passing_rate_kc').text(data['kc_passing_rate'].toFixed(2) + "%");
+
+        $('#acc_updates_chart').remove();
+        $('#acc_updates_chart_div').append('<canvas id="acc_updates_chart"></canvas>');
+
+        $('#proj_updates_chart').remove();
+        $('#proj_updates_chart_div').append('<canvas id="proj_updates_chart"></canvas>');
+
+        $('#sp_updates_chart').remove();
+        $('#sp_updates_chart_div').append('<canvas id="sp_updates_chart"></canvas>');
+
+        $('#source_updates_chart').remove();
+        $('#source_updates_chart_div').append('<canvas id="source_updates_chart"></canvas>');
+
+        $('#type_updates_chart').remove();
+        $('#type_updates_chart_div').append('<canvas id="type_updates_chart"></canvas>');
+
+        $('#acc_kc_chart').remove();
+        $('#acc_kc_chart_div').append('<canvas id="acc_kc_chart"></canvas>');
+
+        $('#proj_kc_chart').remove();
+        $('#proj_kc_chart_div').append('<canvas id="proj_kc_chart"></canvas>');
+
+        $('#sp_kc_chart').remove();
+        $('#sp_kc_chart_div').append('<canvas id="sp_kc_chart"></canvas>');
+
+        var acc_updates_chBar = document.getElementById("acc_updates_chart");
+        if (acc_updates_chBar) {
+            new Chart(acc_updates_chBar, {
+                type: 'bar',
+                data: {
+                    labels: data['acc_list'],
+                    datasets: [
+                        {
+                            data: data['acc_t_updates'],
+                            backgroundColor: 'rgba(0,150,136 ,0.5)',
+                            borderColor: 'rgba(0,150,136 ,1)',
+                            borderWidth: 1
+            },
+                        {
+                            data: data['acc_p_updates'],
+                            backgroundColor: 'rgba(183,28,28 ,0.5)',
+                            borderColor: 'rgba(183,28,28 ,1)',
+                            borderWidth: 1
+            },
+                        {
+                            data: data['acc_ack_updates'],
+                            backgroundColor: 'rgba(76,175,80 ,0.5)',
+                            borderColor: 'rgba(76,175,80 ,1)',
+                            borderWidth: 1
+            }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            barPercentage: 0.4,
+                            categoryPercentage: 0.5,
+                      }],
+
+                      yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                      }]
+                    }
+                }
+            });
+        }
+
+        var proj_updates_chBar = document.getElementById("proj_updates_chart");
+        if (proj_updates_chBar) {
+            new Chart(proj_updates_chBar, {
+                type: 'bar',
+                data: {
+                    labels: data['proj_list'],
+                    datasets: [
+                        {
+                            data: data['proj_t_updates'],
+                            backgroundColor: 'rgba(0,150,136 ,0.5)',
+                            borderColor: 'rgba(0,150,136 ,1)',
+                            borderWidth: 1
+            },
+                        {
+                            data: data['proj_p_updates'],
+                            backgroundColor: 'rgba(183,28,28 ,0.5)',
+                            borderColor: 'rgba(183,28,28 ,1)',
+                            borderWidth: 1
+            },
+                        {
+                            data: data['proj_ack_updates'],
+                            backgroundColor: 'rgba(76,175,80 ,0.5)',
+                            borderColor: 'rgba(76,175,80 ,1)',
+                            borderWidth: 1
+            }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            barPercentage: 0.4,
+                            categoryPercentage: 0.5,
+              }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+              }]
+                    }
+                }
+            });
+        }
+
+        var sp_updates_chBar = document.getElementById("sp_updates_chart");
+        if (sp_updates_chBar) {
+            new Chart(sp_updates_chBar, {
+                type: 'bar',
+                data: {
+                    labels: data['sp_list'],
+                    datasets: [
+                        {
+                            data: data['sp_t_updates'],
+                            backgroundColor: 'rgba(0,150,136 ,0.5)',
+                            borderColor: 'rgba(0,150,136 ,1)',
+                            borderWidth: 1
+            },
+                        {
+                            data: data['sp_p_updates'],
+                            backgroundColor: 'rgba(183,28,28 ,0.5)',
+                            borderColor: 'rgba(183,28,28 ,1)',
+                            borderWidth: 1
+            },
+                        {
+                            data: data['sp_ack_updates'],
+                            backgroundColor: 'rgba(76,175,80 ,0.5)',
+                            borderColor: 'rgba(76,175,80 ,1)',
+                            borderWidth: 1
+            }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            barPercentage: 0.4,
+                            categoryPercentage: 0.5,
+              }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+              }]
+                    }
+                }
+            });
+        }
+
+        var source_updates_chBar = document.getElementById("source_updates_chart");
+        if (source_updates_chBar) {
+            new Chart(source_updates_chBar, {
+                type: 'bar',
+                data: {
+                    labels: data['update_source_list'],
+                    datasets: [
+                        {
+                            data: data['update_source_t_updates'],
+                            backgroundColor: 'rgba(0,150,136 ,0.5)',
+                            borderColor: 'rgba(0,150,136 ,1)',
+                            borderWidth: 1
+
+                        },
+                        {
+                            data: data['update_source_p_updates'],
+                            backgroundColor: 'rgba(183,28,28 ,0.5)',
+                            borderColor: 'rgba(183,28,28 ,1)',
+                            borderWidth: 1
+                        },
+                        {
+                            data: data['update_source_ack_updates'],
+                            backgroundColor: 'rgba(76,175,80 ,0.5)',
+                            borderColor: 'rgba(76,175,80 ,1)',
+                            borderWidth: 1
+                        }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            barPercentage: 0.4,
+                            categoryPercentage: 0.5,
+              }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+              }]
+                    }
+                }
+            });
+        }
+
+        var type_updates_chBar = document.getElementById("type_updates_chart");
+        if (type_updates_chBar) {
+            new Chart(type_updates_chBar, {
+                type: 'bar',
+                data: {
+                    labels: data['update_type_list'],
+                    datasets: [
+                        {
+                            data: data['update_type_t_updates'],
+                            backgroundColor: 'rgba(0,150,136 ,0.5)',
+                            borderColor: 'rgba(0,150,136 ,1)',
+                            borderWidth: 1
+                        },
+                        {
+                            data: data['update_type_p_updates'],
+                            backgroundColor: 'rgba(183,28,28 ,0.5)',
+                            borderColor: 'rgba(183,28,28 ,1)',
+                            borderWidth: 1
+                        },
+                        {
+                            data: data['update_type_ack_updates'],
+                            backgroundColor: 'rgba(76,175,80 ,0.5)',
+                            borderColor: 'rgba(76,175,80 ,1)',
+                            borderWidth: 1
+                        }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            barPercentage: 0.4,
+                            categoryPercentage: 0.5,
+              }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+              }]
+                    }
+                }
+            });
+        }
+
+
+        var acc_kc_chBar = document.getElementById("acc_kc_chart");
+        if (acc_kc_chBar) {
+            new Chart(acc_kc_chBar, {
+                type: 'bar',
+                data: {
+                    labels: data['acc_list'],
+                    datasets: [
+                        {
+                            data: data['acc_t_kc'],
+                            backgroundColor: 'rgba(0,150,136 ,1)'
+            },
+                        {
+                            data: data['acc_p_kc'],
+                            backgroundColor: 'rgba(183,28,28 ,1)'
+            },
+                        {
+                            data: data['acc_ack_kc'],
+                            backgroundColor: 'rgba(76,175,80 ,1)'
+            }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            barPercentage: 0.4,
+                            categoryPercentage: 0.5,
+              }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+              }]
+                    }
+                }
+            });
+        }
+
+        var proj_kc_chBar = document.getElementById("proj_kc_chart");
+        if (proj_kc_chBar) {
+            new Chart(proj_kc_chBar, {
+                type: 'bar',
+                data: {
+                    labels: data['proj_list'],
+                    datasets: [
+                        {
+                            data: data['proj_t_kc'],
+                            backgroundColor: 'rgba(0,150,136 ,1)'
+            },
+                        {
+                            data: data['proj_p_kc'],
+                            backgroundColor: 'rgba(183,28,28 ,1)'
+            },
+                        {
+                            data: data['proj_ack_kc'],
+                            backgroundColor: 'rgba(76,175,80 ,1)'
+            }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            barPercentage: 0.4,
+                            categoryPercentage: 0.5,
+              }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+              }]
+                    }
+                }
+            });
+        }
+
+        var sp_kc_chBar = document.getElementById("sp_kc_chart");
+        if (sp_kc_chBar) {
+            new Chart(sp_kc_chBar, {
+                type: 'bar',
+                data: {
+                    labels: data['sp_list'],
+                    datasets: [
+                        {
+                            data: data['sp_t_kc'],
+                            backgroundColor: 'rgba(0,150,136 ,1)'
+            },
+                        {
+                            data: data['sp_p_kc'],
+                            backgroundColor: 'rgba(183,28,28 ,1)'
+            },
+                        {
+                            data: data['sp_ack_kc'],
+                            backgroundColor: 'rgba(76,175,80 ,1)'
+            }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            barPercentage: 0.4,
+                            categoryPercentage: 0.5,
+              }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+              }]
+                    }
+                }
+            });
+        }
+    }
+
+    flatpickr(".date-default", {
+        allowInput: true,
+        dateFormat: "d-m-Y",
+        mode: "range",
+        maxDate: "today",
+    });
+
+
+    $('#loading').show();
+    $.ajax({
+        type: "POST",
+        url: "{% url 'business_statistics' %}",
+        data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        dataType: 'json',
+        success: function (data) {
+            $('#loading').hide();
+
+            vertical_statistics(data);
+
+            if( "{{ user.email }}" == "agent" || "{{ user.email }}" == "superuser")
+                user_statistics(data);
+        }
+    });
+
+    function vertical_statistics_filter()
+    {
+
+        if($('#vertical_statistics_date_picker').val().length == 24)
+        {
+            var startdate = $('#vertical_statistics_date_picker').val().substring(0, 10);
+            var enddate = $('#vertical_statistics_date_picker').val().substring(14, 24);
+
+            $('#loading').show();
+            $.ajax({
+                type: "POST",
+                url: "{% url 'dashboard_vertical_data_filter' %}",
+                data: {
+                    start_date: startdate,
+                    end_date: enddate,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#loading').hide();
+                    vertical_statistics(data);
+                }
+            });
+        }
+        else
+        {
+            alert('Please select Valid date range');
+        }
+
+    }
+
+    function user_statistics_filter()
+    {
+        if ($('#user_statistics_date_picker').val().length == 24)
+        {
+            var startdate = $('#user_statistics_date_picker').val().substring(0, 10);
+            var enddate = $('#user_statistics_date_picker').val().substring(14, 24);
+
+            $('#loading').show();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'dashboard_user_data_filter' %}",
+                    data: {
+                        start_date: startdate,
+                        end_date: enddate,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#loading').hide();
+                        user_statistics(data);
+                    }
+                });
+
+        }
+        else
+        {
+            alert('Please select Valid date range');
+        }
+
+    }
+
+    function hideLoader() {
+        $('#loading').hide();
+    }
+
+    $(window).ready(hideLoader);
+
+</script>
+
+</body>
+</html>

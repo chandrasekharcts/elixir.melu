@@ -1,0 +1,1083 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Elixir Web | Create Admin</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="icon" href="{% static 'images/favicon.png'  %}" type="image/png">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" media="screen"/>
+
+</head>
+<body>
+<div class="main-container">
+    <nav class="navbar navbar-expand justify-content-between fixed-top">
+        <a class="navbar-brand mb-0 h1 d-none d-md-block" href="/dashboard/">
+            <img src="{% static 'images/logo.png' %}" class="navbar-brand-image d-inline-block align-top mr-2" alt="">
+            <small>Elixir <small>v3.0.1</small></small>
+        </a>
+
+        <a class="navbar-brand mb-0 h1 d-none d-md-block">
+            <img src="{% static 'images/newcts.png' %}" class="pb-2">
+        </a>
+
+        <div class="d-flex flex-1 d-block d-md-none">
+            <a href="#" class="sidebar-toggle ml-3">
+                <i data-feather="menu"></i>
+            </a>
+        </div>
+
+        <ul class="navbar-nav d-flex justify-content-end mr-2">
+            <li class="sidebar-nav-item mt-1">
+                <a class="sidebar-nav-link">
+                  <span class="sidebar-nav-name">
+                    <b style="font-family: Arial Rounded MT">{{ user.first_name }} {{ user.last_name }}</b>
+                  </span>
+                </a>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link avatar-with-name" id="navbarDropdownMenuLink" data-toggle="dropdown" href="#">
+                    <img src="{% static 'images/user_icon.png' %}" class="d-inline-block align-top" alt="">
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                    {% if user.email != 'agent' %}
+                    <a class="dropdown-item text-danger" href="/version_history/">Version History</a>
+                    {% endif %}
+                    <a class="dropdown-item text-danger" href="/account/logout/">Logout</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- expand-hover push -->
+    <!-- Sidebar -->
+    <div class="main-sidebar expand-hover push">
+        <ul class="sidebar-nav">
+
+            <!-- Dashboard -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="home"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Dashboard
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+
+            <!-- Reporting -->
+            {% if user.email != 'agent' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/reporting/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="airplay"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Reporting
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- My Task -->
+            {% if user.email == 'agent' or user.email == 'superuser' %}
+            <li class="sidebar-nav-item">
+                <a class="sidebar-nav-link collapsed" data-toggle="collapse" href="#mytask" aria-expanded="false"
+                   aria-controls="example">
+                    <span class="sidebar-nav-icon">
+                        <i data-feather="grid"></i>
+                    </span>
+                    <span class="sidebar-nav-name">
+                        My Tasks
+                    </span>
+                    <span class="sidebar-nav-end">
+                            <i data-feather="chevrons-right" class="nav-collapse-icon"></i>
+                    </span>
+                </a>
+
+                <ul class="sidebar-sub-nav collapse" id="mytask">
+                    <li class="sidebar-nav-item">
+                        <a href="/dashboard/mytasks_up_kc/" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">
+                                <i data-feather="server"></i>
+                                <i data-feather="clipboard"></i>
+                            </span>
+                            <span class="sidebar-nav-name">
+                            Update + Knowledge Test
+                            </span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/dashboard/mytasks_kc/" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">
+                                <i data-feather="clipboard"></i>
+                            </span>
+                            <span class="sidebar-nav-name">
+                                Knowledge Test
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+
+            <!-- Knowledge Test Evaluation -->
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/knowledge-check-evaluation/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="file-text"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Evaluation
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- Divider Start -->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End -->
+
+            <!-- Updates Repository -->
+            {% if user.email != 'agent' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/elixir/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="server"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Updates Repository
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Create New Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-new-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="edit"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create new Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- All Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/all-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="align-justify"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                All Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sent Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sent-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="chevrons-up"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sent Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Pending Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/pending-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="alert-circle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Pending Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Acknowledged Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/acknowledged-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="check-circle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Acknowledged Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+
+            {% if user.email != 'agent' %}
+            <!-- Knowledge Test Repository -->
+            <li class="sidebar-nav-item">
+
+                <a href="/dashboard/conquest/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="clipboard"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Repository
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Question Bank -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/question_bank/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="briefcase"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Question Bank
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Knowledge Test Result -->
+            <li class="sidebar-nav-item">
+
+                <a href="/dashboard/conquest_response/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="book"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Result
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="file-plus"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create Knowledge Test
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create a Question -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-a-question/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="edit-3"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create a Question
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- All Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/all-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="copy"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                        All Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sent Knowledge Test-->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sent-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="arrow-up-right"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sent Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Pending Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/pending-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="alert-triangle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Pending Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Completed Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/completed-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="check-square"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Completed Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Update Source -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/update_source_type/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="cpu"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Update Source
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Update Type -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/update_type/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="maximize-2"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Update Type
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Users -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/users/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="user"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Users
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sub Process -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sub_process/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="users"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sub Process
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+
+
+            <!-- Divider End-->
+            {% endif %}
+
+            {% if user.email == 'superuser' %}
+            <!-- Add Accounts -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listAccount' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="package"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Add Accounts
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Add Projects -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listProject' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="layers"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Add Projects
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create Admin -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listAdmin' %}" class="sidebar-nav-link active">
+              <span class="sidebar-nav-icon">
+                <i data-feather="award"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create Admin
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-5"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+        </ul>
+    </div>
+    <!-- Sidebar End -->
+
+
+    <!-- Main-content-aside -->
+    <div class="main-content">
+
+        <div class="main-main-content">
+
+            <div id="loading">
+                <img src="{% static 'images/4105180.gif' %}" class="ajax-loader"/>
+            </div>
+
+            <div class="container-fluid">
+
+                {% if user.email == 'superuser' %}
+
+                <div class="row">
+
+                    <div class="col-lg-12">
+                        <div class="card mb-grid">
+                            <div class="card-header" style="color: #ffffff">
+
+                                <div class="row">
+
+                                    <div class="col-lg-6" align="left">
+                                        <div class="card-header-title pt-2" style="font-size:11px; font-weight:600">
+                                            Users
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-2" align="right">
+                                        <button data-toggle="modal"
+                                                data-target="#create_admin"
+                                                class="btn btn-sm btn-labeled btn-dark">
+                                                <span class="btn-label">
+                                                    <span class="oi oi-plus" aria-hidden="true"></span>
+                                                </span>
+                                            <span class="btn-text">Create Admin</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="col-lg-2" align="right">
+                                        <button data-toggle="modal"
+                                                data-target="#change_user_type"
+                                                class="btn btn-sm btn-labeled btn-primary">
+                                                <span class="btn-label">
+                                                    <span class="oi oi-person" aria-hidden="true"></span>
+                                                </span>
+                                            <span class="btn-text">Change User-type</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="col-lg-2" align="right">
+                                        <button class="btn btn-sm btn-labeled btn-danger" id="delete_user"
+                                                onclick="deletefn()">
+                                    <span class="btn-label">
+                                        <span class="oi oi-ban" aria-hidden="true"></span>
+                                    </span>
+                                            <span class="btn-text">Delete User</span>
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="card mb-grid text-left">
+                                <div class="card-body">
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" role="tabpanel"
+                                             aria-labelledby="card-tab-1">
+                                            <div class="card mb-grid">
+                                                <div class="table-responsive-md">
+                                                    <table class="table table-actions table-striped table-hover mb-0"
+                                                           data-table>
+                                                        <thead>
+                                                        <tr>
+                                                            <th scope="col" style="font-size:11px; font-weight:600">#
+                                                            </th>
+                                                            <th scope="col" style="font-size:11px; font-weight:600">
+                                                                Selection
+                                                            </th>
+                                                            <th scope="col" style="font-size:11px; font-weight:600">Emp
+                                                                ID
+                                                            </th>
+                                                            <th scope="col" style="font-size:11px; font-weight:600">Full
+                                                                Name
+                                                            </th>
+                                                            <th scope="col" style="font-size:11px; font-weight:600">
+                                                                Email
+                                                            </th>
+                                                            <th scope="col" style="font-size:11px; font-weight:600">User
+                                                                Type
+                                                            </th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody id="elixir_users_list">
+                                                        {% for adm in admins %}
+                                                        <tr>
+                                                            <td>{{ forloop.counter }}</td>
+                                                            <td><label class="switch">
+                                                                <input type="checkbox">
+                                                                <span class="slider round"></span>
+                                                            </label>
+                                                            </td>
+                                                            <td>{{ adm.emp_id }}</td>
+                                                            <td>{{ adm.first_name }} {{ adm.last_name }}</td>
+                                                            <td>{{ adm.email }}</td>
+                                                            <td data-value="{{ adm.id }}">{{ adm.user_type }}</td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Modal: modalCart -->
+                <div class="modal fade" id="create_admin" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl" style="max-width: 900px" role="document">
+                        <div class="modal-content">
+                            <!--Header-->
+                            <div class="modal-header">
+
+                                <div class="row ml-1 mr-1 pr-2 pb-2"
+                                     style="background-color: rgba(232, 234, 246 ,0.25); border-radius: .25rem; width:100%">
+
+                                    <div class="col-md-12">
+                                        <div class="row" align="right">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+
+                                        <div>
+                                            <h6 class="card-title mb-0"
+                                                style="font-size: 14px; font-weight: 600; color: #424242">
+                                                Create Admin</h6>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!--Body-->
+                            <div class="modal-body">
+
+                                <div class="row">
+
+                                    <div class="col-lg-4">
+                                        <label style="font-size:11px; font-weight:600">Select Account</label>
+                                        <div class="form-group">
+                                            <select name="select" class="form-control js-choice" id="accountname_dd">
+                                                <option value="1">-- Select Account --</option>
+                                                {% for acc in accounts %}
+                                                <option value="{{ forloop.counter }}">{{ acc.account_name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <label style="font-size:11px; font-weight:600">Select Project</label>
+                                        <div class="form-group">
+                                            <select name="select" class="form-control js-choice" id="projectname_dd">
+
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <label style="font-size:11px; font-weight:600">Select User Type</label>
+                                        <div class="form-group">
+                                            <select name="select" class="form-control js-choice" id="admintype_dd">
+                                                <option value="1">-- Select Admin Type --</option>
+                                                <option value="2">superuser</option>
+                                                <option value="2">leader</option>
+                                                <option value="3">admin</option>
+                                                <option value="3">poc</option>
+                                                <option value="3">agent</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-lg-4">
+                                        <label style="font-size:11px; font-weight:600">Employee ID</label>
+                                        <input type="text" maxlength="7"
+                                               oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                                               class="form-control" id="empid" aria-describedby="emailHelp"
+                                               placeholder="Enter Employee ID">
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <label style="font-size:11px; font-weight:600">First Name</label>
+                                        <input type="text" class="form-control" id="firstName"
+                                               aria-describedby="emailHelp"
+                                               maxlength="30"
+                                               onkeypress="return /^[a-zA-Z\s]+$/i.test(event.key)"
+                                               placeholder="Enter First Name">
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <label style="font-size:11px; font-weight:600">Last Name</label>
+                                        <input type="text" class="form-control" id="lastName"
+                                               aria-describedby="emailHelp"
+                                               maxlength="30"
+                                               onkeypress="return /^[a-zA-Z\s]+$/i.test(event.key)"
+                                               placeholder="Enter Last Name">
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-lg-4">
+                                        <label style="font-size:11px; font-weight:600">Email</label>
+                                        <input type="email" class="form-control" id="adminEmail"
+                                               aria-describedby="emailHelp"
+                                               placeholder="Enter Email Addresss">
+                                    </div>
+
+                                    <div class="col-lg-2 mt-3">
+                                        <button id="user_submit" type="submit"
+                                                class="btn btn-sm btn-primary pl-5 pr-5 mt-3">
+                                            Submit
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!--Footer-->
+                            <div class="modal-footer">
+                                <label style="font-size:10px; font-weight:600"> Elixir v3.0.1</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal: modalCart -->
+
+                <!-- Modal: modalCart -->
+                <div class="modal fade" id="change_user_type" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl" style="max-width: 900px" role="document">
+                        <div class="modal-content">
+                            <!--Header-->
+                            <div class="modal-header">
+
+                                <div class="row ml-1 mr-1 pr-2 pb-2"
+                                     style="background-color: rgba(232, 234, 246 ,0.25); border-radius: .25rem; width:100%">
+
+                                    <div class="col-md-12">
+                                        <div class="row" align="right">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="row ml-2 mr-2">
+
+                                            <div class="col-lg-4 pl-4 pr-4 mt-1" align="left">
+                                                <div class="row">
+                                                    <h6 style="font-size:11px; font-weight:600">1. Select the Users from
+                                                        the
+                                                        list</h6>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-4">
+                                                <label style="font-size:11px; font-weight:600">2. Select new
+                                                    User-Type</label>
+                                                <div class="form-group">
+                                                    <select name="select" class="form-control js-choice"
+                                                            id="user_type_dd">
+                                                        <option value="1">-- Select User Type --</option>
+                                                        <option value="2">superuser</option>
+                                                        <option value="2">leader</option>
+                                                        <option value="3">admin</option>
+                                                        <option value="3">poc</option>
+                                                        <option value="3">agent</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-4 mt-1">
+                                                <h6 style="font-size:11px; font-weight:600">3. Click on "Apply"</h6>
+                                                <button id="user_type_apply" type="submit"
+                                                        class="btn btn-sm btn-primary pl-5 pr-5 mt-2"
+                                                        onclick="fn_change_user_type()">
+                                                    Apply
+                                                </button>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal: modalCart -->
+
+                {% else %}
+
+                <div class="row mb-2 mt-1">
+
+                    <div class="col">
+                        <h6 style="font-weight:600">**YOU ARE NOT AUTHORIZED TO ACCESS THIS WEB PAGE AS PER THE DOT
+                            COMPLIANCE**</h6>
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- If you prefer jQuery these are the required scripts -->
+<script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/vendor.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/timer.js' %}"></script>
+
+<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'js/buttons.flash.min.js' %}"></script>
+<!--<script src="{% static 'js/jszip.min.js' %}"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="{% static 'js/pdfmake.min.js' %}"></script>
+<script src="{% static 'js/vfs_fonts.js' %}"></script>
+<script src="{% static 'js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'js/buttons.print.min.js' %}"></script>
+
+<script>
+
+    $(document).ready(function () {
+        var table = $('[data-table]').DataTable({
+            "columns": [
+                {
+                    "orderable": false
+                },
+                {
+                    "orderable": false
+                },
+                {
+                    "orderable": false
+                },
+                {
+                    "orderable": false
+                },
+                {
+                    "orderable": false
+                },
+                {
+                    "orderable": false
+                }
+          ],
+          retrieve: true,
+            "searching": true,
+            "paging": false,
+            "ordering": false,
+            "info": true,
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'pdf',
+                    className: 'btn btn-sm btn-danger mt-2 ml-2'
+                    },
+                {
+                    extend: 'copy',
+                    className: 'btn btn-sm btn-dark mt-2'
+                    },
+                {
+                    extend: 'csv',
+                    className: 'btn btn-sm btn-secondary mt-2'
+                    },
+                {
+                    extend: 'excel',
+                    className: 'btn btn-sm btn-primary mt-2'
+                    },
+                {
+                    extend: 'print',
+                    className: 'btn btn-sm btn-info mt-2'
+                    }
+                    ]
+        });
+    });
+
+    function deletefn() {
+
+        users_pk_list = [];
+        document.getElementById("elixir_users_list").querySelectorAll('tr').forEach((e) => {
+            if(e.querySelectorAll('td')[1].querySelectorAll('input')[0].checked == true)
+                {
+                    users_pk_list.push(e.querySelectorAll('td')[5].getAttribute('data-value'))
+                }
+        });
+
+        if (users_pk_list.length == 0) {
+            alert('Please Select atleast 1 user to delete');
+            return;
+        }
+        else {
+            var r = confirm("Are you sure you want to delete this user?");
+            if (r == true)
+            {
+                $('#loading').show();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'sup_del_admin_entry' %}",
+                    data: {
+                        id: JSON.stringify(users_pk_list),
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function () {
+                        $('#loading').hide();
+                        alert('User Deleted');
+                        window.location = "";
+                    }
+                });
+            }
+        }
+    }
+
+    $(document).ready(function () {
+        $('#user_submit').on('click', function () {
+            $acc_name = $("#accountname_dd option:selected").text();
+            $proj_name = $("#projectname_dd option:selected").text();
+            $admin_type = $("#admintype_dd option:selected").text();
+            $emp_id = $('#empid').val();
+            $first_name = $('#firstName').val();
+            $last_name = $('#lastName').val();
+            $email_id = $('#adminEmail').val();
+
+            var atposition  = $email_id.indexOf("@");
+            var dotposition = $email_id.lastIndexOf(".");
+
+            if ($acc_name == "-- Select Account --") {
+                alert("Please Select Account Name");
+            } else if ($proj_name == "-- Select Project --") {
+                alert("Please Select Project Name");
+            } else if ($emp_id == "") {
+                alert("Please Enter Employee ID");
+            } else if ($first_name == "") {
+                alert("Please Enter First Name of Admin");
+            } else if ($last_name == "") {
+                alert("Please Enter Last Name of Admin");
+            } else if ($email_id == "") {
+                alert("Please Enter Email Address of Admin");
+            } else if ($admin_type == "-- Select Admin Type --") {
+                alert("Please Select Admin Type");
+            } else if (atposition < 1 || dotposition < atposition+2 || dotposition+2 >= $email_id.length) {
+                  alert("Please enter a valid e-mail address");
+            } else {
+                $('#loading').show();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'sup_create_admin' %}",
+                    data: {
+                        account_name: $acc_name,
+                        project_name: $proj_name,
+                        admin_type: $admin_type,
+                        emp_id: $emp_id,
+                        first_name: $first_name.toLowerCase(),
+                        last_name: $last_name.toLowerCase(),
+                        email_id: $email_id.toLowerCase(),
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function () {
+                        $('#loading').hide();
+                        alert("Admin created successfully");
+                        window.location = "";
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).ready(function () {
+
+        $("#accountname_dd").change(function () {
+            $acc_name = $("#accountname_dd option:selected").text();
+
+            $('#loading').show();
+            $.ajax({
+                type: "POST",
+                url: "{% url 'user_project_list' %}",
+                data: {
+                    account_name: $acc_name,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#loading').hide();
+                    project_list = data['proj_name']
+                    $('#projectname_dd').html('');
+                    $('#projectname_dd').append('<option value="0">' + "-- Select Project --" + '</option>');
+                    for (var i = 0; i < project_list.length; i++) {
+                        $('#projectname_dd').append($('<option>', {
+                            value: i + 1,
+                            text: project_list[i].project_name
+                        }));
+                    }
+                }
+            });
+        });
+    });
+
+    function fn_change_user_type()
+    {
+        $user_type = $("#user_type_dd option:selected").text();
+
+        users_list = [];
+        document.getElementById("elixir_users_list").querySelectorAll('tr').forEach((e) => {
+            if(e.querySelectorAll('td')[1].querySelectorAll('input')[0].checked == true)
+                {
+                    users_list.push(e.querySelectorAll('td')[4].innerHTML);
+                }
+        });
+
+        if(users_list.length == 0) {
+            alert('Please Select atleast 1 User');
+            return;
+        } else if ($user_type == "-- Select User Type --") {
+                alert("Please Select User Type");
+        }
+        else {
+            $('#loading').show();
+            $.ajax({
+                type: "POST",
+                url: "{% url 'change_user_type' %}",
+                data: {
+                    users_list: JSON.stringify(users_list),
+                    user_type: $user_type,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#loading').hide();
+                    alert(data['message']);
+                    window.location = "";
+                }
+            });
+        }
+
+    }
+
+    function hideLoader() {
+        $('#loading').hide();
+    }
+
+    $(window).ready(hideLoader);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>

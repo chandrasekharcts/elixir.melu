@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Elixir Web | 404 - Page not found</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="{% static 'images/favicon.png'  %}" type="image/png">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" media="screen" />
+  </head>
+  <body>
+    <div class="main-container d-flex justify-content-center align-items-center">
+      <div class="page-error">
+
+        <div class="row" align="center">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-2">
+                <img style="height: 150px" src="{% static 'images/logo.png' %}">
+            </div>
+            <div class="col-lg-2">
+                <img style="height: 60px; margin-top:50px; margin-left:10px"
+                     src="{% static 'images/cts_logo.png' %}">
+            </div>
+            <div class="col-lg-5"></div>
+        </div>
+
+        <div class="error-code">
+          404
+        </div>
+        <h1>Page not found</h1>
+
+        <p class="text-muted mb-5">
+          Looks like the page you're requesting isn't here anymore.
+        </p>
+
+        <a href="/accounts/login/" class="btn btn-primary">Go back to Login</a>
+      </div>
+    </div>
+
+    <!-- If you prefer jQuery these are the required scripts -->
+    <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/vendor.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+  </body>
+</html>

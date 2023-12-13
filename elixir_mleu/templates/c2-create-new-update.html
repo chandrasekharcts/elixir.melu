@@ -1,0 +1,1619 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Elixir Web | Create New Update</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="icon" href="{% static 'images/favicon.png'  %}" type="image/png">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" media="screen"/>
+
+</head>
+<body>
+<div class="main-container">
+    <nav class="navbar navbar-expand justify-content-between fixed-top">
+        <a class="navbar-brand mb-0 h1 d-none d-md-block" href="/dashboard/">
+            <img src="{% static 'images/logo.png' %}" class="navbar-brand-image d-inline-block align-top mr-2" alt="">
+            <small>Elixir <small>v3.0.1</small></small>
+        </a>
+
+        <a class="navbar-brand mb-0 h1 d-none d-md-block">
+            <img src="{% static 'images/newcts.png' %}" class="pb-2">
+        </a>
+
+        <div class="d-flex flex-1 d-block d-md-none">
+            <a href="#" class="sidebar-toggle ml-3">
+                <i data-feather="menu"></i>
+            </a>
+        </div>
+
+        <ul class="navbar-nav d-flex justify-content-end mr-2">
+            <li class="sidebar-nav-item mt-1">
+                <a class="sidebar-nav-link">
+                  <span class="sidebar-nav-name">
+                    <b style="font-family: Arial Rounded MT">{{ user.first_name }} {{ user.last_name }}</b>
+                  </span>
+                </a>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link avatar-with-name" id="navbarDropdownMenuLink" data-toggle="dropdown" href="#">
+                    <img src="{% static 'images/user_icon.png' %}" class="d-inline-block align-top" alt="">
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                    {% if user.email != 'agent' %}
+                    <a class="dropdown-item text-danger" href="/version_history/">Version History</a>
+                    {% endif %}
+                    <a class="dropdown-item text-danger" href="/account/logout/">Logout</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- expand-hover push -->
+    <!-- Sidebar -->
+    <div class="main-sidebar expand-hover push">
+        <ul class="sidebar-nav">
+
+            <!-- Dashboard -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="home"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Dashboard
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+
+            <!-- Reporting -->
+            {% if user.email != 'agent' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/reporting/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="airplay"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Reporting
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- My Task -->
+            {% if user.email == 'agent' or user.email == 'superuser' %}
+            <li class="sidebar-nav-item">
+                <a class="sidebar-nav-link collapsed" data-toggle="collapse" href="#mytask" aria-expanded="false"
+                   aria-controls="example">
+                    <span class="sidebar-nav-icon">
+                        <i data-feather="grid"></i>
+                    </span>
+                    <span class="sidebar-nav-name">
+                        My Tasks
+                    </span>
+                    <span class="sidebar-nav-end">
+                            <i data-feather="chevrons-right" class="nav-collapse-icon"></i>
+                    </span>
+                </a>
+
+                <ul class="sidebar-sub-nav collapse" id="mytask">
+                    <li class="sidebar-nav-item">
+                        <a href="/dashboard/mytasks_up_kc/" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">
+                                <i data-feather="server"></i>
+                                <i data-feather="clipboard"></i>
+                            </span>
+                            <span class="sidebar-nav-name">
+                            Update + Knowledge Test
+                            </span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/dashboard/mytasks_kc/" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">
+                                <i data-feather="clipboard"></i>
+                            </span>
+                            <span class="sidebar-nav-name">
+                                Knowledge Test
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+
+            <!-- Knowledge Test Evaluation -->
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/knowledge-check-evaluation/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="file-text"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Evaluation
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- Divider Start -->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End -->
+
+            <!-- Updates Repository -->
+            {% if user.email != 'agent' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/elixir/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="server"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Updates Repository
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Create New Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-new-update/" class="sidebar-nav-link active">
+              <span class="sidebar-nav-icon">
+                <i data-feather="edit"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create new Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- All Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/all-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="align-justify"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                All Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sent Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sent-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="chevrons-up"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sent Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Pending Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/pending-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="alert-circle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Pending Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Acknowledged Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/acknowledged-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="check-circle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Acknowledged Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+
+            {% if user.email != 'agent' %}
+            <!-- Knowledge Test Repository -->
+            <li class="sidebar-nav-item">
+
+                <a href="/dashboard/conquest/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="clipboard"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Repository
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Question Bank -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/question_bank/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="briefcase"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Question Bank
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Knowledge Test Result -->
+            <li class="sidebar-nav-item">
+
+                <a href="/dashboard/conquest_response/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="book"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Result
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="file-plus"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create Knowledge Test
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create a Question -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-a-question/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="edit-3"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create a Question
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- All Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/all-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="copy"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                        All Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sent Knowledge Test-->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sent-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="arrow-up-right"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sent Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Pending Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/pending-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="alert-triangle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Pending Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Completed Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/completed-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="check-square"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Completed Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Update Source -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/update_source_type/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="cpu"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Update Source
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Update Type -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/update_type/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="maximize-2"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Update Type
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Users -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/users/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="user"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Users
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sub Process -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sub_process/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="users"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sub Process
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+
+
+            <!-- Divider End-->
+            {% endif %}
+
+            {% if user.email == 'superuser' %}
+            <!-- Add Accounts -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listAccount' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="package"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Add Accounts
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Add Projects -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listProject' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="layers"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Add Projects
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create Admin -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listAdmin' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="award"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create Admin
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-5"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+        </ul>
+    </div>
+    <!-- Sidebar End -->
+
+    <!-- Main-content-aside -->
+    <div class="main-content">
+        <div class="main-main-content">
+
+            <div id="loading">
+                <img src="{% static 'images/4105180.gif' %}" class="ajax-loader"/>
+            </div>
+
+            <div class="container-fluid">
+
+                {% if user.email == 'poc' or user.email == 'superuser' %}
+
+                <form onsubmit="return false">
+
+                    <div class="row p-2 ml-1 mr-1" style="background-color: #ECEFF1; border-radius: .25rem">
+                        <div class="col-lg-3" align="left">
+                            <div class="row">
+                                <label class="switch">
+                                    <input type="checkbox" id="up_switch" onclick="switchfn()" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                                <h6 class="ml-1 mt-1" style="font-weight: 600; font-size: 14px">Update</h6>
+                            </div>
+
+                            <div class="row">
+                                <label class="switch">
+                                    <input type="checkbox" id="kc_switch" onclick="myFunction()">
+                                    <span class="slider round"></span>
+                                </label>
+                                <h6 class="ml-1 mt-1" style="font-weight: 600; font-size: 14px">Update + Knowledge
+                                    Check</h6>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6"></div>
+
+                        <div class="col-lg-2 mt-2">
+                            <button class="btn btn-primary" id="sendupdate">
+                                  <span class="btn-text pl-5 pr-5">
+                                    Send Update
+                                  </span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class=" mt-2" id="update_section" style="background-color: #E8F5E9; border-radius: .25rem">
+                        <div class="p-2">
+                            <div class="row mt-1">
+                                <div class="col-lg-3 mt-1">
+                                    <h6 style="font-size:11px; font-weight:600">Sub-Process :</h6>
+                                    <select name="select" multiple class="form-control js-choice-remove"
+                                            id="up_sub_process">
+                                        {% for sp in sub_process %}
+                                        <option value="{{ forloop.counter }}">{{ sp.sub_process_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-3 mt-1">
+                                    <h6 style="font-size:11px; font-weight:600">Update Source :</h6>
+                                    <select name="select" class="form-control js-choice" id="up_update_source">
+                                        <option value="1">-- Select Update Source --</option>
+                                        {% for up_src in update_source %}
+                                        <option value="{{ forloop.counter }}">{{ up_src.update_source_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-3 mt-1">
+                                    <h6 style="font-size:11px; font-weight:600">Update Type :</h6>
+                                    <select name="select" class="form-control js-choice" id="up_update_type">
+                                        <option value="1">-- Select Update Type --</option>
+                                        {% for up_type in update_type %}
+                                        <option value="{{ forloop.counter }}">{{ up_type.update_type_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-3 mt-1">
+                                    <h6 style="font-size:11px; font-weight:600">Update Validity :</h6>
+                                    <input id="validity" class="form-control mb-2 date-time" type="text"
+                                           autocomplete="off"
+                                           placeholder="Update Validity : dd-mm-yyyy hh:mm">
+                                </div>
+                            </div>
+
+                            <div class="row mt-1">
+                                <div class="col-lg-12">
+                                    <h6 style="font-size:11px; font-weight:600">Update Subject/Title :</h6>
+                                    <div class="form-group">
+                                        <input type="text" maxlength="100" class="form-control" id="up_title"
+                                               aria-describedby="emailHelp"
+                                               placeholder="Title" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row ml-1 mr-1">
+
+                            <div class="col-lg-2">
+                                <span style="color:#000000; font-size:16px; font-weight:600">Add Attachment : </span>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <input type="file" onchange="upload_attachment_file(this)" id="upload_attachment"
+                                       style="color:#000000; font-size:16px; font-weight:600" multiple>
+                            </div>
+
+                            <div class="col-lg-7" hidden>
+                                <span id="attachment_url" style="color:#000000; font-size:10px; font-weight:600"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="row mb-2 mt-2 ml-1 mr-1">
+                            <div class="col-lg-12">
+                                {{ update_editor.media }}
+                                {{ update_editor.as_p }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 pr-2 pl-2" id="kc_data" style="background-color: #FFF3E0; border-radius: .25rem">
+
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <h6 style="font-size:11px; font-weight:600">Passing Percentage :</h6>
+                                <div class="form-group">
+                                    <input type="text" maxlength="3"
+                                           oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control"
+                                           id="score"
+                                           aria-describedby="emailHelp" placeholder="Passing Percentage"
+                                           autocomplete="off">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2">
+                                <h6 style="font-size:11px; font-weight:600">Max Attempts :</h6>
+                                <div class="form-group">
+                                    <input type="text" maxlength="1"
+                                           oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control"
+                                           id="attempts"
+                                           aria-describedby="emailHelp" placeholder="No of max. Attempts"
+                                           autocomplete="off">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-8">
+                                <h6 style="font-size:11px; font-weight:600">Knowledge Test Title :</h6>
+                                <div class="form-group">
+                                    <input type="text" maxlength="25" class="form-control" id="kc_title"
+                                           aria-describedby="emailHelp"
+                                           placeholder="Title" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="questions" class="p-2">
+                        </div>
+
+                        <div class="row mb-2 p-2">
+                            <div class="col-lg-9 mb-2">
+
+                            </div>
+
+                            <div class="col-lg-1 mb-2">
+                                <button class="btn btn-sm btn-info" id="add_question_frame">
+                                  <span class="btn-text pl-5 pr-5">
+                                   Add Question
+                                  </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+                {% else %}
+
+                <div class="row mb-2 mt-1">
+
+                    <div class="col">
+                        <h6 style="font-weight:600">**YOU ARE NOT AUTHORIZED TO ACCESS THIS WEB PAGE AS PER THE DOT
+                            COMPLIANCE**</h6>
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- If you prefer jQuery these are the required scripts -->
+<script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/vendor.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+
+<script src="{% static 'ckeditor/ckeditor/adapters/jquery.js' %}"></script>
+<script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+
+<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
+
+<script>
+
+    var choices = new Choices('.js-choice-remove', {
+        removeItemButton: true,
+    });
+
+    flatpickr(".date-time", {
+        allowInput: true,
+        enableTime: true,
+        dateFormat: "d-m-Y H:i",
+        minDate: "today",
+    });
+
+        window.onload = myFunction();
+
+        function myFunction() {
+        var checkBox = document.getElementById("kc_switch");
+        var text = document.getElementById("kc_data");
+        if (checkBox.checked == true) {
+            text.style.display = "block";
+            $("#up_switch").prop('checked', false);
+        } else {
+            text.style.display = "none";
+            $("#up_switch").prop('checked', true);
+        }
+    }
+
+        function switchfn() {
+        var up_checkBox = document.getElementById("up_switch");
+        if (up_checkBox.checked == true) {
+            $("#kc_switch").prop('checked', false);
+            myFunction();
+        } else {
+            $("#kc_switch").prop('checked', true);
+            myFunction();
+        }
+    }
+
+        $(document).ready(function () {
+        $('#sendupdate').on('click', function () {
+            $conq_id = "";
+            var checkBox = document.getElementById("kc_switch");
+            $title = $('#up_title').val();
+            $update_source = $("#up_update_source option:selected").text();
+            $update_type = $("#up_update_type option:selected").text();
+            $validity = $("#validity").val();
+            $score = $('#score').val();
+            $attempts = $('#attempts').val();
+            $kc_title = $('#kc_title').val();
+
+            var sp_dropdown = document.getElementById('up_sub_process');
+            $sub_process = [];
+            for (var i = 0; i < sp_dropdown.options.length; i++) {
+                if (sp_dropdown.options[i].selected) {
+                    $sub_process.push(sp_dropdown.options[i].text);
+                }
+            }
+
+            document.querySelectorAll("div#cke_id_update_message iframe")[0].contentDocument.documentElement.querySelectorAll("p img").forEach((e) => {
+                val = e.getAttribute('src');
+                val = window.location.href.split('/')[0] + "//" + window.location.href.split('/')[2] + val;
+                e.removeAttribute('data-cke-saved-src');
+                e.removeAttribute('src');
+                e.setAttribute('data-cke-saved-src', val);
+                e.setAttribute('src', val)
+            })
+
+            $message = "";
+            document.querySelectorAll("div#cke_id_update_message iframe")[0]
+                .contentWindow.document.querySelectorAll("p")
+                .forEach((e) => {
+                    $message += e.innerHTML
+                });
+
+            if ($sub_process.length == 0) {
+                alert("Please Select Sub Process");
+            } else if ($title == "") {
+                alert("Please Enter Title");
+            } else if ($update_source == "-- Select Update Source --") {
+                alert("Please Select Update Source");
+            } else if ($update_type == "-- Select Update Type --") {
+                alert("Please Select Update Type");
+            } else if ($validity == "") {
+                alert("Please Select Validity");
+            } else if ($message == "<br>") {
+                alert("Update Message Body : cannot be left blank");
+            } else if (checkBox.checked == true && $score == "") {
+                alert('Please Enter the Passing Score');
+                return;
+            } else if (checkBox.checked == true && $attempts == "") {
+                alert('Please Enter the Max no. of attempts');
+                return;
+            } else if (checkBox.checked == true && $kc_title == "") {
+                alert('Please Enter the Knowledge Test Title');
+                return;
+            } else {
+
+                var attachments = [];
+                attach_files = document.getElementById('upload_attachment');
+                files_count = attach_files.files.length;
+
+                if (files_count > 0) {
+                    attachment_tag = document.querySelectorAll("div#cke_id_update_message iframe")[0].contentWindow.document.querySelector('body');
+                    p_tag = document.createElement('p');
+                    var span_tag = document.createElement('span');
+                    p_tag.appendChild(span_tag);
+                    span_tag.setAttribute("style", "font-size:16px");
+                    u_tag = document.createElement('u');
+                    span_tag.appendChild(u_tag);
+                    strong_tag = document.createElement('strong');
+                    u_tag.appendChild(strong_tag);
+                    strong_tag.innerText = "Attachments : ";
+                    attachment_tag.appendChild(p_tag);
+
+                    document.getElementById('attachment_url').innerHTML.split(',').forEach((e) => {
+                        attachments.push(e.replace(/\"/g, "").trim());
+
+                        url = window.location.href.split('/')[0] + "//" + window.location.href.split('/')[2] + e;
+
+                        var p_tag = document.createElement('p');
+                        var a_tag = document.createElement('a');
+                        p_tag.appendChild(a_tag);
+                        a_tag.setAttribute("href", url);
+                        a_tag.innerText = url;
+
+                        attachment_tag.appendChild(p_tag);
+                    });
+                }
+
+                $message_at = document.querySelectorAll("div#cke_id_update_message iframe")[0].contentWindow.document.querySelector('body').innerHTML;
+
+                attachments = new Set(attachments);
+                attachments = Array.from(attachments);
+
+                if (checkBox.checked == true) {
+                    check = 0;
+                    questions = [];
+
+                    questions_count = document.querySelectorAll("div[id = questions] > div").length;
+
+                    if (questions_count < 1) {
+                        alert('Please provide atleast one question');
+                        check = 1;
+                        return;
+                    } else {
+                        document.querySelectorAll("div[id = questions] > div").forEach((e) => {
+
+                            question = e.querySelector('iframe').contentWindow.document.querySelector('body').innerHTML;
+                            q_marks = e.querySelector("input#marks").value;
+                            q_media = e.querySelector("select#media_type option:checked").text;
+                            q_media_url = e.querySelector("h5#media_url").innerText;
+
+                            if (question == "\n") {
+                                alert('Please provide Questions in all the questions field');
+                                check = 1;
+                                return;
+                            } else if (q_marks == "") {
+                                alert('Please provide Marks for all the questions');
+                                check = 1;
+                                return;
+                            } else if (q_media != "No Media" && q_media == "") {
+                                alert('Please upload a media file for all Media Questions');
+                                check = 1;
+                                return;
+                            } else {
+                                question_type = e.querySelector("select#question_type option:checked").text;
+
+                                question_options = [];
+                                question_answer = [];
+                                if (question_type == "Subjective") {
+                                    answer = e.querySelector('textarea#subjective_answer').value;
+                                    if (answer) {
+                                        question_options.push("answer");
+                                        question_answer.push(answer);
+                                    } else {
+                                        alert('Please provide answer all question');
+                                    }
+                                } else if (question_type == "MCQs") {
+                                    var op_count = e.querySelectorAll("input[itemtype = option_mcq_text]").length;
+                                    if (op_count < 3) {
+                                        alert('Please provide atleast 3 options in MCQs');
+                                        check = 1;
+                                        return;
+                                    } else {
+                                        for (var c = 0; c < op_count; c++) {
+                                            option = e.querySelectorAll("input[itemtype = option_mcq_text]")[c].value
+                                            if (option == "") {
+                                                alert('Added Options Cannot be left blank');
+                                                check = 1;
+                                                return;
+                                            } else {
+                                                question_options.push(option);
+
+                                                if (e.querySelectorAll("input[class = option_mcq]")[c].checked) {
+                                                    question_answer.push(1);
+                                                } else {
+                                                    question_answer.push(0);
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else if (question_type == "MAQs") {
+                                    var op_count = e.querySelectorAll("input[itemtype = option_maq_text]").length;
+                                    if (op_count < 2) {
+                                        alert('Please provide atleast 2 options in MAQs');
+                                        check = 1;
+                                        return;
+                                    } else {
+                                        for (var c = 0; c < op_count; c++) {
+                                            option = e.querySelectorAll("input[itemtype = option_maq_text]")[c].value;
+                                            if (option == "") {
+                                                alert('Added Options Cannot be left blank');
+                                                check = 1;
+                                                return;
+                                            } else {
+                                                question_options.push(option);
+
+                                                if (e.querySelectorAll("input[class = option_maq]")[c].checked) {
+                                                    question_answer.push(1);
+                                                } else {
+                                                    question_answer.push(0);
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else if (question_type == "True or False") {
+                                    $true = e.querySelector('#option_tf_true').value;
+                                    $false = e.querySelector('#option_tf_false').value;
+
+                                    if ($true == "") {
+                                        alert('Added Options Cannot be left blank');
+                                        check = 1;
+                                        return;
+                                    } else if ($false == "") {
+                                        alert('Added Options Cannot be left blank');
+                                        check = 1;
+                                        return;
+                                    } else {
+                                        question_options.push($true);
+                                        question_options.push($false);
+
+                                        if (e.querySelectorAll("input[class = option_tf]")[0].checked) {
+                                            question_answer.push(1);
+                                        } else {
+                                            question_answer.push(0);
+                                        }
+
+                                        if (e.querySelectorAll("input[class = option_tf]")[1].checked) {
+                                            question_answer.push(1);
+                                        } else {
+                                            question_answer.push(0);
+                                        }
+                                    }
+                                } else {
+                                    alert('Please Select the Question Type');
+                                    check = 1;
+                                    return;
+                                }
+
+                                no_check_count = 0;
+                                for (var qa_val = 0; qa_val < question_answer.length; qa_val++) {
+                                    if (question_answer[qa_val] == 0) {
+                                        no_check_count++;
+                                    }
+                                }
+                                if (no_check_count == question_answer.length) {
+                                    alert('Please provide atleast one correct answer in each question');
+                                    check = 1;
+                                    return;
+                                } else {
+                                    var object = {};
+                                    object['question'] = question;
+                                    object['question_type'] = question_type;
+                                    object['question_options'] = question_options;
+                                    object['question_answer'] = question_answer;
+                                    object['question_marks'] = q_marks;
+                                    object['question_media_type'] = q_media;
+                                    object['question_media_url'] = q_media_url;
+
+                                    questions.push(object);
+                                }
+                            }
+                        });
+                    }
+
+                    if (check == 0) {
+
+                        $('#loading').show();
+                        $.ajax({
+                            type: "POST",
+                            url: "{% url 'send_update' %}",
+                            data: {
+                                title: $title,
+                                sub_process: JSON.stringify($sub_process),
+                                validity: $validity,
+                                update_type: $update_type,
+                                update_source: $update_source,
+                                message: $message_at,
+                                attachments: JSON.stringify(attachments),
+                                kc_score: $score,
+                                kc_attempts: $attempts,
+                                kc_title: $kc_title,
+                                kc_questions: JSON.stringify(questions),
+                                csrfmiddlewaretoken: '{{ csrf_token }}'
+                            },
+                            success: function (dataset) {
+                                $('#loading').hide();
+                                alert('Update & Knowledge Test Sent Successfully');
+                                window.location = "";
+                            }
+                        });
+                    }
+                } else {
+
+                    $score = "na";
+                    $attempts = "na";
+                    $kc_title = "na";
+                    questions = [];
+
+                    $('#loading').show();
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'send_update' %}",
+                        data: {
+                            title: $title,
+                            sub_process: JSON.stringify($sub_process),
+                            validity: $validity,
+                            update_type: $update_type,
+                            update_source: $update_source,
+                            message: $message_at,
+                            attachments: JSON.stringify(attachments),
+                            kc_score: $score,
+                            kc_attempts: $attempts,
+                            kc_title: $kc_title,
+                            kc_questions: JSON.stringify(questions),
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function (data) {
+                            $('#loading').hide();
+                            alert('Update Sent Successfully');
+                            window.location = "";
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+        $('#add_question_frame').on('click', function (e) {
+        e.preventDefault();
+
+        var card_div = document.createElement('div');
+        card_div.setAttribute("class", "card mb-grid");
+
+        var card_header_div = document.createElement('div');
+        card_div.appendChild(card_header_div);
+        card_header_div.setAttribute("class", "card-header");
+        card_header_div.setAttribute("style", "background-color:#ffffff; color:#000000");
+
+        var design_div = document.createElement('div');
+        card_header_div.appendChild(design_div);
+        design_div.setAttribute("style", "background-color: #FFF3E0; border-radius: .25rem");
+
+        var ch_row_div1 = document.createElement('div');
+        design_div.appendChild(ch_row_div1);
+        ch_row_div1.setAttribute("class", "row ml-1 mr-1 pt-2 pb-1");
+
+        var ch_col_div1 = document.createElement('div');
+        ch_row_div1.appendChild(ch_col_div1);
+        ch_col_div1.setAttribute("class", "col-lg-3");
+
+        var content_div1 = document.createElement('div');
+        ch_col_div1.appendChild(content_div1);
+        content_div1.setAttribute("class", "form-group");
+        content_div1.setAttribute("style", "color: #000000");
+
+        var content_div1_heading = document.createElement('h6');
+        content_div1.appendChild(content_div1_heading);
+        content_div1_heading.setAttribute("style", "font-size:11px; font-weight:600");
+        content_div1_heading.innerHTML = "Question Type :";
+
+        var select_1 = document.createElement('select');
+        content_div1.appendChild(select_1);
+        select_1.setAttribute("name", "select");
+        select_1.setAttribute("class", "form-control js-choice");
+        select_1.setAttribute("id", "question_type");
+
+        var select_1_option_1 = document.createElement('option');
+        select_1.appendChild(select_1_option_1);
+        select_1_option_1.setAttribute("value", "1");
+        select_1_option_1.innerHTML = "-- Select Question Type --";
+
+        var select_1_option_2 = document.createElement('option');
+        select_1.appendChild(select_1_option_2);
+        select_1_option_2.setAttribute("value", "2");
+        select_1_option_2.innerHTML = "True or False";
+
+        var select_1_option_3 = document.createElement('option');
+        select_1.appendChild(select_1_option_3);
+        select_1_option_3.setAttribute("value", "3");
+        select_1_option_3.innerHTML = "MCQs";
+
+        var select_1_option_4 = document.createElement('option');
+        select_1.appendChild(select_1_option_4);
+        select_1_option_4.setAttribute("value", "4");
+        select_1_option_4.innerHTML = "MAQs";
+
+        var select_1_option_5 = document.createElement('option');
+        select_1.appendChild(select_1_option_5);
+        select_1_option_5.setAttribute("value", "5");
+        select_1_option_5.innerHTML = "Subjective";
+
+        var ch_col_div3 = document.createElement('div');
+        ch_row_div1.appendChild(ch_col_div3);
+        ch_col_div3.setAttribute("class", "col-lg-2");
+
+        var content_div3_heading = document.createElement('h6');
+        ch_col_div3.appendChild(content_div3_heading);
+        content_div3_heading.setAttribute("style", "font-size:11px; font-weight:600");
+        content_div3_heading.innerHTML = "Question Marks :";
+
+        var content_div3 = document.createElement('div');
+        ch_col_div3.appendChild(content_div3);
+        content_div3.setAttribute("class", "form-group");
+        content_div3.setAttribute("style", "color: #000000");
+
+        var col_div3_input = document.createElement('input');
+        content_div3.appendChild(col_div3_input);
+        col_div3_input.setAttribute("type", "text");
+        col_div3_input.setAttribute("maxlength", "1");
+        col_div3_input.setAttribute("oninput", "this.value=this.value.replace(/[^0-9]/g,'');");
+        col_div3_input.setAttribute("class", "form-control");
+        col_div3_input.setAttribute("id", "marks");
+        col_div3_input.setAttribute("aria-describedby", "emailHelp");
+        col_div3_input.setAttribute("placeholder", "Marks");
+        col_div3_input.setAttribute("autocomplete", "off");
+
+        var ch_col_div4 = document.createElement('div');
+        ch_row_div1.appendChild(ch_col_div4);
+        ch_col_div4.setAttribute("class", "col-lg-3");
+
+        var content_div4 = document.createElement('div');
+        ch_col_div4.appendChild(content_div4);
+        content_div4.setAttribute("class", "form-group");
+        content_div4.setAttribute("style", "color: #000000");
+
+        var content_div4_heading = document.createElement('h6');
+        content_div4.appendChild(content_div4_heading);
+        content_div4_heading.setAttribute("style", "font-size:11px; font-weight:600");
+        content_div4_heading.innerHTML = "Media File :";
+
+        var select_2 = document.createElement('select');
+        content_div4.appendChild(select_2);
+        select_2.setAttribute("name", "select_media");
+        select_2.setAttribute("class", "form-control js-choice");
+        select_2.setAttribute("id", "media_type");
+
+        var select_2_option_1 = document.createElement('option');
+        select_2.appendChild(select_2_option_1);
+        select_2_option_1.setAttribute("value", "1");
+        select_2_option_1.innerHTML = "No Media";
+
+        var select_2_option_2 = document.createElement('option');
+        select_2.appendChild(select_2_option_2);
+        select_2_option_2.setAttribute("value", "2");
+        select_2_option_2.innerHTML = "Video";
+
+        var select_2_option_3 = document.createElement('option');
+        select_2.appendChild(select_2_option_3);
+        select_2_option_3.setAttribute("value", "3");
+        select_2_option_3.innerHTML = "Audio";
+
+        var select_2_option_4 = document.createElement('option');
+        select_2.appendChild(select_2_option_4);
+        select_2_option_4.setAttribute("value", "4");
+        select_2_option_4.innerHTML = "Document";
+
+        var ch_col_div5 = document.createElement('div');
+        ch_row_div1.appendChild(ch_col_div5);
+        ch_col_div5.setAttribute("class", "col-lg-3 pt-4");
+
+        var content_div5_input1 = document.createElement('input');
+        ch_col_div5.appendChild(content_div5_input1);
+        content_div5_input1.setAttribute("type", "file");
+        content_div5_input1.setAttribute("onchange", "upload_file(this)");
+        content_div5_input1.setAttribute("id", "upload_video_file");
+        content_div5_input1.setAttribute("style", "color:#000000; font-size:16px; font-weight:400; display:none");
+        content_div5_input1.setAttribute("accept", ".mp4,.avi");
+
+        var content_div5_input2 = document.createElement('input');
+        ch_col_div5.appendChild(content_div5_input2);
+        content_div5_input2.setAttribute("type", "file");
+        content_div5_input2.setAttribute("onchange", "upload_file(this)");
+        content_div5_input2.setAttribute("id", "upload_audio_file");
+        content_div5_input2.setAttribute("style", "color:#000000; font-size:16px; font-weight:400; display:none");
+        content_div5_input2.setAttribute("accept", ".mp3,.wav");
+
+        var content_div5_input3 = document.createElement('input');
+        ch_col_div5.appendChild(content_div5_input3);
+        content_div5_input3.setAttribute("type", "file");
+        content_div5_input3.setAttribute("onchange", "upload_file(this)");
+        content_div5_input3.setAttribute("id", "upload_docs_file");
+        content_div5_input3.setAttribute("style", "color:#000000; font-size:16px; font-weight:400; display:none");
+        content_div5_input3.setAttribute("accept", ".xls,.xlsx,.docx,.doc,.pdf,.pptx");
+
+        var ch_col_div2 = document.createElement('div');
+        ch_row_div1.appendChild(ch_col_div2);
+        ch_col_div2.setAttribute("class", "col-lg-1 mt-4");
+        ch_col_div2.setAttribute("align", "right");
+
+        var button_delete = document.createElement('button');
+        ch_col_div2.appendChild(button_delete);
+        button_delete.setAttribute("type", "button");
+        button_delete.setAttribute("class", "btn btn-sm btn-danger");
+
+        function Remove_ThisFrame(e) {
+            var element = e.target;
+            e.preventDefault();
+            element.removeEventListener('click', Remove_ThisFrame);
+            $(element.parentElement.parentElement.parentElement.parentElement.parentElement).remove();
+        }
+
+        button_delete.addEventListener('click', Remove_ThisFrame);
+        button_delete.innerHTML = "X";
+
+        var ch_row_url_heading = document.createElement('h5');
+        design_div.appendChild(ch_row_url_heading);
+        ch_row_url_heading.setAttribute("class", "ml-3 mr-3 pb-2");
+        ch_row_url_heading.setAttribute("id", "media_url");
+        ch_row_url_heading.setAttribute("style", "font-size:12px; font-weight:400");
+        ch_row_url_heading.hidden = true;
+
+        var form_1 = document.createElement('form');
+        card_header_div.appendChild(form_1);
+        var form_1_div = document.createElement('div');
+        form_1.appendChild(form_1_div);
+        form_1_div.setAttribute("class", "row mb-2 mt-1");
+        var form_1_div_editor = document.createElement('div');
+        form_1_div.appendChild(form_1_div_editor);
+        form_1_div_editor.setAttribute("class", "col-lg-12");
+        form_1_div_editor.setAttribute("itemtype", "editor_col");
+        var editor = document.createElement('textarea');
+        form_1_div_editor.append(editor);
+        $(editor).ckeditor({
+            customConfig: 'custom_toolbar/config.js',
+            filebrowserBrowseUrl: '/ckeditor/browse/?',
+            filebrowserUploadUrl: '/ckeditor/upload/',
+        });
+
+        var card_2 = document.createElement('div');
+        card_div.appendChild(card_2);
+        card_2.setAttribute("class", "card mb-grid text-center");
+        var card_body = document.createElement('div');
+        card_2.appendChild(card_body);
+        card_body.setAttribute("class", "card-body");
+        card_body.setAttribute("itemtype", "parent_div_q_type");
+
+        var q_tf_div = document.createElement('div');
+        card_body.appendChild(q_tf_div);
+        q_tf_div.setAttribute("class", "row");
+        q_tf_div.setAttribute("id", "qtype_tf");
+        var q_tf_div_row = document.createElement('div');
+        q_tf_div.appendChild(q_tf_div_row);
+        q_tf_div_row.setAttribute("class", "row mt-1");
+        var q_tf_div_col_1 = document.createElement('div');
+        q_tf_div_row.appendChild(q_tf_div_col_1);
+        q_tf_div_col_1.setAttribute("class", "col-lg-1 mt-1");
+        q_tf_div_col_1.setAttribute("align", "right");
+
+        var q_tf_input1 = document.createElement('input');
+        q_tf_div_col_1.appendChild(q_tf_input1);
+        q_tf_input1.setAttribute("class", "option_tf");
+        q_tf_input1.setAttribute("type", "radio");
+        q_tf_input1.addEventListener("click", check_event_listener_tf);
+
+        var q_tf_div_col_2 = document.createElement('div');
+        q_tf_div_row.appendChild(q_tf_div_col_2);
+        q_tf_div_col_2.setAttribute("class", "col-lg-3");
+        q_tf_div_col_2.setAttribute("align", "left");
+
+        var q_tf_input2 = document.createElement('input');
+        q_tf_div_col_2.appendChild(q_tf_input2);
+        q_tf_input2.setAttribute("type", "text");
+        q_tf_input2.setAttribute("class", "form-control");
+        q_tf_input2.setAttribute("id", "option_tf_true");
+        q_tf_input2.setAttribute("placeholder", "True");
+        q_tf_input2.setAttribute("autocomplete", "off");
+
+        var q_tf_div_row2 = document.createElement('div');
+        q_tf_div.appendChild(q_tf_div_row2);
+        q_tf_div_row2.setAttribute("class", "row mt-1");
+        var q_tf_div_col_3 = document.createElement('div');
+        q_tf_div_row2.appendChild(q_tf_div_col_3);
+        q_tf_div_col_3.setAttribute("class", "col-lg-1 mt-1");
+        q_tf_div_col_3.setAttribute("align", "right");
+
+        q_tf_input3 = document.createElement('input');
+        q_tf_div_col_3.appendChild(q_tf_input3);
+        q_tf_input3.setAttribute("class", "option_tf");
+        q_tf_input3.setAttribute("type", "radio");
+        q_tf_input3.addEventListener("click", check_event_listener_tf);
+
+
+        var q_tf_div_col_4 = document.createElement('div');
+        q_tf_div_row2.appendChild(q_tf_div_col_4);
+        q_tf_div_col_4.setAttribute("class", "col-lg-3");
+        q_tf_div_col_4.setAttribute("align", "left");
+        var q_tf_input4 = document.createElement('input');
+        q_tf_div_col_4.appendChild(q_tf_input4);
+        q_tf_input4.setAttribute("type", "text");
+        q_tf_input4.setAttribute("class", "form-control");
+        q_tf_input4.setAttribute("id", "option_tf_false");
+        q_tf_input4.setAttribute("placeholder", "False");
+        q_tf_input4.setAttribute("autocomplete", "off");
+
+        var q_mcq_div = document.createElement('div');
+        card_body.appendChild(q_mcq_div);
+        q_mcq_div.setAttribute("class", "row");
+        q_mcq_div.setAttribute("id", "qtype_mcq");
+        var q_mcq_div_options = document.createElement('div');
+        q_mcq_div.appendChild(q_mcq_div_options);
+        q_mcq_div_options.setAttribute("id", "mcq_options");
+        var q_mcq_options_div1 = document.createElement('div');
+        q_mcq_div_options.appendChild(q_mcq_options_div1);
+        q_mcq_options_div1.setAttribute("class", "col-lg-12");
+        q_mcq_options_div1.setAttribute("align", "right");
+        var mcq_button = document.createElement('button');
+        q_mcq_options_div1.appendChild(mcq_button);
+        mcq_button.setAttribute("type", "button");
+        mcq_button.setAttribute("class", "btn btn-sm btn-success");
+        mcq_button.setAttribute("id", "add_ops_mcq");
+        mcq_button.innerHTML = "Add Option";
+
+        var q_maq_div = document.createElement('div');
+        card_body.appendChild(q_maq_div);
+        q_maq_div.setAttribute("class", "row");
+        q_maq_div.setAttribute("id", "qtype_maq");
+        var q_maq_div_options = document.createElement('div');
+        q_maq_div.appendChild(q_maq_div_options);
+        q_maq_div_options.setAttribute("id", "maq_options");
+        var q_maq_options_div1 = document.createElement('div');
+        q_maq_div_options.appendChild(q_maq_options_div1);
+        q_maq_options_div1.setAttribute("class", "col-lg-12");
+        q_maq_options_div1.setAttribute("align", "right");
+        var maq_button = document.createElement('button');
+        q_maq_options_div1.appendChild(maq_button);
+        maq_button.setAttribute("type", "button");
+        maq_button.setAttribute("class", "btn btn-sm btn-success");
+        maq_button.setAttribute("id", "add_ops_maq");
+        maq_button.innerHTML = "Add Option";
+
+        var q_subj_div = document.createElement('div');
+        card_body.appendChild(q_subj_div);
+        q_subj_div.setAttribute("id", "qtype_subj");
+        q_subj_div.setAttribute("style", "display:none");
+
+        q_subj_div_form = document.createElement('form');
+        q_subj_div.appendChild(q_subj_div_form);
+
+        q_subj_div_form_div = document.createElement('div');
+        q_subj_div_form.appendChild(q_subj_div_form_div);
+        q_subj_div_form_div.setAttribute("class", "form-group");
+        q_subj_div_form_div.setAttribute("align", "left");
+
+        q_subj_div_form_div_label1 = document.createElement('label');
+        q_subj_div_form_div.appendChild(q_subj_div_form_div_label1);
+        q_subj_div_form_div_label1.setAttribute("for", "subjective_answer");
+        q_subj_div_form_div_label1.setAttribute("style", "font-size:12px; font-weight:600");
+        q_subj_div_form_div_label1.innerHTML = "Answer";
+
+        q_subj_div_form_div_textarea = document.createElement('textarea');
+        q_subj_div_form_div.appendChild(q_subj_div_form_div_textarea);
+        q_subj_div_form_div_textarea.setAttribute("class", "form-control");
+        q_subj_div_form_div_textarea.setAttribute("id", "subjective_answer");
+        q_subj_div_form_div_textarea.setAttribute("maxlength", "750");
+        q_subj_div_form_div_textarea.setAttribute("rows", "4");
+
+        q_subj_div_form_div_label2 = document.createElement('label');
+        q_subj_div_form_div.appendChild(q_subj_div_form_div_label2);
+        q_subj_div_form_div_label2.setAttribute("id", "count");
+        q_subj_div_form_div_label2.setAttribute("style", "font-size:12px");
+
+        document.getElementById('questions').appendChild(card_div);
+
+        $(q_subj_div_form_div_textarea).keyup(function () {
+            count_text = this.parentElement.querySelectorAll('label')[1];
+            count = (750 - $(this).val().length) + " characters remaining";
+            count_text.innerText = count;
+        });
+
+        $(select_1).change(function () {
+            $(card_body).find(' > div').hide()
+            this.value == 2 ? $(q_tf_div).show() : false;
+            this.value == 3 ? $(q_mcq_div).show() : false;
+            this.value == 4 ? $(q_maq_div).show() : false;
+            this.value == 5 ? $(q_subj_div).show() : false;
+        });
+
+        $(select_2).change(function () {
+            $(ch_col_div5).find(' > input').hide()
+            this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.querySelectorAll('h5')[0].innerText = "";
+            this.value == 2 ? $(content_div5_input1).show() : false;
+            this.value == 3 ? $(content_div5_input2).show() : false;
+            this.value == 4 ? $(content_div5_input3).show() : false;
+        });
+
+        function check_event_listener_tf(e) {
+            ques_options_set = e.target.parentElement.parentElement.parentElement;
+            ques_options_set.querySelectorAll('.option_tf').forEach((e) => {
+                e.checked = false;
+            });
+            $(this).prop('checked', true);
+        }
+
+        $(mcq_button).on('click', function (e) {
+            e.preventDefault();
+
+            var div1 = document.createElement('div');
+            div1.setAttribute("class", "row mt-1");
+            div1.setAttribute("id", "mcq_option");
+
+            var div2 = document.createElement('div');
+            div1.appendChild(div2);
+            div2.setAttribute("class", "col-lg-1 mt-1");
+            div2.setAttribute("align", "right");
+            var input_div2 = document.createElement('input');
+
+            function check_event_listener(e) {
+                ques_options_set = e.target.parentElement.parentElement.parentElement;
+                ques_options_set.querySelectorAll('.option_mcq').forEach((e) => {
+                    e.checked = false;
+                });
+                $(this).prop('checked', true);
+            }
+
+            div2.appendChild(input_div2);
+            input_div2.setAttribute("class", "option_mcq");
+            input_div2.setAttribute("type", "radio");
+            input_div2.addEventListener("click", check_event_listener);
+
+            var div3 = document.createElement('div');
+            div1.appendChild(div3);
+            div3.setAttribute("class", "col-lg-3");
+            div3.setAttribute("align", "left");
+            var input_div3 = document.createElement('input');
+            div3.appendChild(input_div3);
+            input_div3.setAttribute("class", "form-control");
+            input_div3.setAttribute("itemtype", "option_mcq_text");
+            input_div3.setAttribute("placeholder", "Enter Option");
+
+            var div4 = document.createElement('div');
+            div1.appendChild(div4);
+            div4.setAttribute("class", "col-lg-1");
+            var button_div4 = document.createElement('button');
+            div4.appendChild(button_div4);
+            button_div4.setAttribute("type", "button");
+            button_div4.setAttribute("class", "btn btn-sm btn-danger");
+
+            function Remove_This(e) {
+                var element = e.target;
+                e.preventDefault();
+                element.removeEventListener('click', Remove_This);
+                $(element.parentElement.parentElement).remove();
+            }
+
+            button_div4.addEventListener('click', Remove_This);
+            button_div4.innerHTML = "Delete";
+
+            $(q_mcq_div).append(div1);
+
+        });
+
+        $(maq_button).on('click', function (e) {
+            e.preventDefault();
+
+            var div1 = document.createElement('div');
+            div1.setAttribute("class", "row mt-1");
+            div1.setAttribute("id", "maq_option");
+
+            var div2 = document.createElement('div');
+            div1.appendChild(div2);
+            div2.setAttribute("class", "col-lg-1 mt-1");
+            div2.setAttribute("align", "right");
+            var input_div2 = document.createElement('input');
+            div2.appendChild(input_div2);
+            input_div2.setAttribute("class", "option_maq");
+            input_div2.setAttribute("type", "checkbox");
+
+            var div3 = document.createElement('div');
+            div1.appendChild(div3);
+            div3.setAttribute("class", "col-lg-3");
+            div3.setAttribute("align", "left");
+            var input_div3 = document.createElement('input');
+            div3.appendChild(input_div3);
+            input_div3.setAttribute("class", "form-control");
+            input_div3.setAttribute("itemtype", "option_maq_text");
+            input_div3.setAttribute("placeholder", "Enter Option");
+
+            var div4 = document.createElement('div');
+            div1.appendChild(div4);
+            div4.setAttribute("class", "col-lg-1");
+            var button_div4 = document.createElement('button');
+            div4.appendChild(button_div4);
+            button_div4.setAttribute("type", "button");
+            button_div4.setAttribute("class", "btn btn-sm btn-danger");
+
+            function Remove_This(e) {
+                var element = e.target;
+                e.preventDefault();
+                element.removeEventListener('click', Remove_This);
+                $(element.parentElement.parentElement).remove();
+            }
+
+            button_div4.addEventListener('click', Remove_This);
+            button_div4.innerHTML = "Delete";
+
+            $(q_maq_div).append(div1);
+
+        });
+    });
+
+        function hideLoader() {
+        $('#loading').hide();
+    }
+
+        $(window).ready(hideLoader);
+
+        function upload_file(e) {
+        $('#loading').show();
+        var formData = new FormData();
+        formData.append('user_file', e.files[0]);
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+        $.ajax({
+            url: "{% url 'upload_media_file' %}",
+            type: 'post',
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $('#loading').hide();
+                if (data['code'] == 1) {
+                    e.parentElement.parentElement.parentElement.querySelectorAll('h5')[0].innerText = data['uploaded_media_url'];
+                    notify(data['message'], 'success')
+                } else {
+                    $(e).val('');
+                    notify(data['message'], 'danger')
+                }
+            }
+        });
+    }
+
+        const notifications = new window.notifications({
+        notificationSound: '{% static 'media/notification.mp3' %}',
+        volume: 0.5
+    });
+
+        function notify(message, style_type) {
+        notifications.fire(message, {
+            autoHide: true,
+            playSound: true,
+            duration: 5000,
+            style: style_type,
+        });
+    }
+
+        function upload_attachment_file(e) {
+        $('#loading').show();
+        var formData = new FormData();
+        $.each($("#upload_attachment")[0].files, function (i, file) {
+            formData.append("attachment_file", file);
+        });
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+        $.ajax({
+            url: "{% url 'upload_attachment_file' %}",
+            type: 'post',
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $('#loading').hide();
+                if (data['code'] == 1) {
+                    att = [];
+                    att.push(data['uploaded_media_url']);
+                    document.getElementById('attachment_url').innerText = data['uploaded_media_url'];
+                    notify(data['message'], 'success')
+
+                } else {
+                    $(e).val('');
+                    document.getElementById('attachment_url').innerText = "";
+                    notify(data['message'], 'danger');
+                }
+            },
+            error: function (xhr, exception) {
+                $('#loading').hide();
+                $(e).val('');
+                document.getElementById('attachment_url').innerText = "";
+                var msg = '';
+                if (xhr.status === 0) {
+                    msg = 'Not connect.\n Verify Network.';
+                } else if (xhr.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                } else if (xhr.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                } else if (xhr === 'parsererror') {
+                    msg = 'Requested JSON parse failed.';
+                } else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                } else {
+                    msg = 'Uncaught Error.\n' + xhr.responseText;
+                }
+                notify(msg+"Error: Organisation restricted uploading of these file(s)", 'danger');
+            }
+        });
+    }
+
+</script>
+
+</body>
+</html>

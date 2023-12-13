@@ -1,0 +1,1375 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Elixir Web | Knowledge Test Evaluation</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="icon" href="{% static 'images/favicon.png'  %}" type="image/png">
+    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" media="screen"/>
+
+</head>
+<body onload="hide_message()">
+<div class="main-container">
+    <nav class="navbar navbar-expand justify-content-between fixed-top">
+        <a class="navbar-brand mb-0 h1 d-none d-md-block" href="/dashboard/">
+            <img src="{% static 'images/logo.png' %}" class="navbar-brand-image d-inline-block align-top mr-2" alt="">
+            <small>Elixir <small>v3.0.1</small></small>
+        </a>
+
+        <a class="navbar-brand mb-0 h1 d-none d-md-block">
+            <img src="{% static 'images/newcts.png' %}" class="pb-2">
+        </a>
+
+        <div class="d-flex flex-1 d-block d-md-none">
+            <a href="#" class="sidebar-toggle ml-3">
+                <i data-feather="menu"></i>
+            </a>
+        </div>
+
+        <ul class="navbar-nav d-flex justify-content-end mr-2">
+            <li class="sidebar-nav-item mt-1">
+                <a class="sidebar-nav-link">
+                  <span class="sidebar-nav-name">
+                    <b style="font-family: Arial Rounded MT">{{ user.first_name }} {{ user.last_name }}</b>
+                  </span>
+                </a>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link avatar-with-name" id="navbarDropdownMenuLink" data-toggle="dropdown" href="#">
+                    <img src="{% static 'images/user_icon.png' %}" class="d-inline-block align-top" alt="">
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                    {% if user.email != 'agent' %}
+                    <a class="dropdown-item text-danger" href="/version_history/">Version History</a>
+                    {% endif %}
+                    <a class="dropdown-item text-danger" href="/account/logout/">Logout</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- expand-hover push -->
+    <!-- Sidebar -->
+    <div class="main-sidebar expand-hover push">
+        <ul class="sidebar-nav">
+
+            <!-- Dashboard -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="home"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Dashboard
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+
+            <!-- Reporting -->
+            {% if user.email != 'agent' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/reporting/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="airplay"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Reporting
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- My Task -->
+            {% if user.email == 'agent' or user.email == 'superuser' %}
+            <li class="sidebar-nav-item">
+                <a class="sidebar-nav-link collapsed" data-toggle="collapse" href="#mytask" aria-expanded="false"
+                   aria-controls="example">
+                    <span class="sidebar-nav-icon">
+                        <i data-feather="grid"></i>
+                    </span>
+                    <span class="sidebar-nav-name">
+                        My Tasks
+                    </span>
+                    <span class="sidebar-nav-end">
+                            <i data-feather="chevrons-right" class="nav-collapse-icon"></i>
+                    </span>
+                </a>
+
+                <ul class="sidebar-sub-nav collapse" id="mytask">
+                    <li class="sidebar-nav-item">
+                        <a href="/dashboard/mytasks_up_kc/" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">
+                                <i data-feather="server"></i>
+                                <i data-feather="clipboard"></i>
+                            </span>
+                            <span class="sidebar-nav-name">
+                            Update + Knowledge Test
+                            </span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/dashboard/mytasks_kc/" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">
+                                <i data-feather="clipboard"></i>
+                            </span>
+                            <span class="sidebar-nav-name">
+                                Knowledge Test
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+
+            <!-- Knowledge Test Evaluation -->
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/knowledge-check-evaluation/" class="sidebar-nav-link active">
+              <span class="sidebar-nav-icon">
+                <i data-feather="file-text"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Evaluation
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- Divider Start -->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End -->
+
+            <!-- Updates Repository -->
+            {% if user.email != 'agent' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/elixir/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="server"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Updates Repository
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Create New Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-new-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="edit"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create new Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- All Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/all-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="align-justify"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                All Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sent Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sent-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="chevrons-up"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sent Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Pending Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/pending-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="alert-circle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Pending Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Acknowledged Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/acknowledged-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="check-circle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Acknowledged Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+
+            {% if user.email != 'agent' %}
+            <!-- Knowledge Test Repository -->
+            <li class="sidebar-nav-item">
+
+                <a href="/dashboard/conquest/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="clipboard"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Repository
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Question Bank -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/question_bank/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="briefcase"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Question Bank
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Knowledge Test Result -->
+            <li class="sidebar-nav-item">
+
+                <a href="/dashboard/conquest_response/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="book"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Result
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="file-plus"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create Knowledge Test
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create a Question -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-a-question/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="edit-3"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create a Question
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- All Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/all-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="copy"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                        All Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sent Knowledge Test-->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sent-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="arrow-up-right"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sent Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Pending Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/pending-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="alert-triangle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Pending Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Completed Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/completed-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="check-square"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Completed Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Update Source -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/update_source_type/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="cpu"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Update Source
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Update Type -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/update_type/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="maximize-2"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Update Type
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Users -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/users/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="user"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Users
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sub Process -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sub_process/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="users"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sub Process
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+
+
+            <!-- Divider End-->
+            {% endif %}
+
+            {% if user.email == 'superuser' %}
+            <!-- Add Accounts -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listAccount' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="package"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Add Accounts
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Add Projects -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listProject' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="layers"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Add Projects
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create Admin -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listAdmin' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="award"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create Admin
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-5"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+        </ul>
+    </div>
+    <!-- Sidebar End -->
+
+    <!-- Main-content-aside -->
+    <div class="main-content">
+
+        <input type="hidden" id="user_username" value={{user.username}}>
+
+        {% if user.email == 'poc' or user.email == 'superuser' %}
+
+        <div class="main-aside">
+
+            <div class="col-lg-12 pl-2 pr-2 pt-2 mb-2">
+                <div class="form-group">
+                    <h6 style="font-size:11px; font-weight:600">Knowledge Test Title :</h6>
+                    <select name="select" class="form-control js-choice" id="conquest_id">
+                        <option value="1">-- Select Knowledge Test Title --</option>
+                        {% for kc in conquest_list %}
+                        <option value="{{ forloop.counter }}">{{ kc.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="dropdown-divider"></div>
+
+            <div id="conquest_user_list"></div>
+
+        </div>
+
+        {% endif %}
+
+
+        <div class="main-main-content">
+
+            <div id="loading">
+                <img src="{% static 'images/4105180.gif' %}" class="ajax-loader"/>
+            </div>
+
+            <div class="container-fluid">
+
+                {% if user.email == 'poc' or user.email == 'superuser' %}
+
+                <div class="row">
+
+                    <div class="col-lg-2"></div>
+
+                    <div class="col-lg-10">
+
+                        <div class="ml-3 mr-3">
+
+                            <div class="row pt-2" style="background-color:#E8F5E9">
+
+                                <div class="task-head col-lg-1" style="text-align: left">
+                                    <h6 style="font-size:11px; font-weight: 600">Knowledge Test ID</h6>
+                                </div>
+                                <div class="task-head col-lg-1" style="text-align: right">
+                                    <h6 style="font-size:11px; font-weight: 600">:</h6>
+                                </div>
+
+                                <div class="task-head col-lg-3" style="text-align: left">
+                                    <h6 id="kc_id" style="font-size:12px; font-weight: 600"></h6>
+                                </div>
+
+                                <div class="task-head col-lg-2"></div>
+
+                                <div class="task-head col-lg-1" style="text-align: left">
+                                    <h6 style="font-size:11px; font-weight: 600">Agent Email</h6>
+                                </div>
+                                <div class="task-head col-lg-1" style="text-align: right">
+                                    <h6 style="font-size:11px; font-weight: 600">:</h6>
+                                </div>
+
+                                <div class="task-head col-lg-3" style="text-align: left">
+                                    <h6 id="kc_agent" style="font-size:12px; font-weight: 600"></h6>
+                                </div>
+
+                            </div>
+
+                            <div class="row pt-2" style="background-color:#F1F8E9">
+
+                                <div class="task-head col-lg-1" style="text-align: left">
+                                    <h6 style="font-size:11px; font-weight: 600">Initiated On</h6>
+                                </div>
+                                <div class="task-head col-lg-1" style="text-align: right">
+                                    <h6 style="font-size:11px; font-weight: 600">:</h6>
+                                </div>
+
+                                <div class="task-head col-lg-3" style="text-align: left">
+                                    <h6 id="kc_timestamp" style="font-size:12px; font-weight: 600"></h6>
+                                </div>
+
+                                <div class="task-head col-lg-2"></div>
+
+                                <div class="task-head col-lg-1" style="text-align: left">
+                                    <h6 style="font-size:11px; font-weight: 600">Deadline</h6>
+                                </div>
+                                <div class="task-head col-lg-1" style="text-align: right">
+                                    <h6 style="font-size:11px; font-weight: 600">:</h6>
+                                </div>
+
+                                <div class="task-head col-lg-3" style="text-align: left">
+                                    <h6 id="kc_deadline" style="font-size:12px; font-weight: 600"></h6>
+                                </div>
+
+                            </div>
+
+                            <div class="row pt-2" style="background-color:#F9FBE7">
+
+                                <div class="task-head col-lg-1" style="text-align: left">
+                                    <h6 style="font-size:11px; font-weight: 600">Maximum Attempt</h6>
+                                </div>
+                                <div class="task-head col-lg-1" style="text-align: right">
+                                    <h6 style="font-size:11px; font-weight: 600">:</h6>
+                                </div>
+
+                                <div class="task-head col-lg-3" style="text-align: left">
+                                    <h6 id="kc_attempt" style="font-size:11px; font-weight: 600"></h6>
+                                </div>
+
+                                <div class="task-head col-lg-2"></div>
+
+                                <div class="task-head col-lg-1" style="text-align: left">
+                                    <h6 style="font-size:11px; font-weight: 600">Agent Attempts</h6>
+                                </div>
+                                <div class="task-head col-lg-1" style="text-align: right">
+                                    <h6 style="font-size:11px; font-weight: 600">:</h6>
+                                </div>
+
+                                <div class="task-head col-lg-3" style="text-align: left">
+                                    <h6 id="kc_agent_attempt" style="font-size:12px; font-weight: 600"></h6>
+                                </div>
+
+                            </div>
+
+                            <div class="row pt-2" style="background-color:#FFFDE7">
+
+                                <div class="task-head col-lg-1" style="text-align: left">
+                                    <h6 style="font-size:11px; font-weight: 600">Passing Score</h6>
+                                </div>
+                                <div class="task-head col-lg-1" style="text-align: right">
+                                    <h6 style="font-size:11px; font-weight: 600">:</h6>
+                                </div>
+
+                                <div class="task-head col-lg-3" style="text-align: left">
+                                    <h6 id="kc_p_score" style="font-size:12px; font-weight: 600"></h6>
+                                </div>
+
+                                <div class="task-head col-lg-2"></div>
+
+                                <div class="task-head col-lg-1" style="text-align: left">
+                                    <h6 style="font-size:11px; font-weight: 600">Agent Score</h6>
+                                </div>
+                                <div class="task-head col-lg-1" style="text-align: right">
+                                    <h6 style="font-size:11px; font-weight: 600">:</h6>
+                                </div>
+
+                                <div class="task-head col-lg-3" style="text-align: left">
+                                    <h6 id="kc_agent_score" style="font-size:12px; font-weight: 600"></h6>
+                                </div>
+
+                            </div>
+
+                            <div class="row pt-2" style="background-color:#FFF8E1">
+
+                                <div class="task-head col-lg-1" style="text-align: left">
+                                    <h6 style="font-size:11px; font-weight: 600">Question Count</h6>
+                                </div>
+                                <div class="task-head col-lg-1" style="text-align: right">
+                                    <h6 style="font-size:11px; font-weight: 600">:</h6>
+                                </div>
+
+                                <div class="task-head col-lg-3" style="text-align: left">
+                                    <h6 id="kc_q_count" style="font-size:12px; font-weight: 600"></h6>
+                                </div>
+
+                                <div class="task-head col-lg-2"></div>
+
+                                <div class="task-head col-lg-1" style="text-align: left">
+                                    <h6 style="font-size:11px; font-weight: 600">Completion Rate</h6>
+                                </div>
+                                <div class="task-head col-lg-1" style="text-align: right">
+                                    <h6 style="font-size:11px; font-weight: 600">:</h6>
+                                </div>
+
+                                <div class="task-head col-lg-3" style="text-align: left">
+                                    <h6 id="kc_comp_rate" style="font-size:12px; font-weight: 600"></h6>
+                                </div>
+
+                            </div>
+
+                            <div class="row pt-2" style="background-color:#FFF3E0">
+
+                                <div class="task-head col-lg-1" style="text-align: left">
+                                    <h6 style="font-size:11px; font-weight: 600">Sender</h6>
+                                </div>
+                                <div class="task-head col-lg-1" style="text-align: right">
+                                    <h6 style="font-size:11px; font-weight: 600">:</h6>
+                                </div>
+
+                                <div class="task-head col-lg-3" style="text-align: left">
+                                    <h6 id="kc_sender" style="font-size:12px; font-weight: 600"></h6>
+                                </div>
+
+                                <div class="task-head col-lg-2"></div>
+
+                                <div class="task-head col-lg-1" style="text-align: left">
+                                    <h6 style="font-size:11px; font-weight: 600">Sub Process</h6>
+                                </div>
+                                <div class="task-head col-lg-1" style="text-align: right">
+                                    <h6 style="font-size:11px; font-weight: 600">:</h6>
+                                </div>
+
+                                <div class="task-head col-lg-3" style="text-align: left">
+                                    <h6 id="kc_subprocess" style="font-size:12px; font-weight: 600"></h6>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div id="pkt"></div>
+
+                        <div class="row mb-5 mt-3" id="eval_btn" style="align-content: center">
+                            <div class="col-lg-12" align="center">
+                                <a href="#" id="submit_kc" class="btn btn-sm btn-labeled-center btn-primary pl-5 pr-5">
+                                    <span class="btn-text">Submit</span>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% else %}
+
+                <div class="row mb-2 mt-1">
+
+                    <div class="col">
+                        <h6 style="font-weight:600">**YOU ARE NOT AUTHORIZED TO ACCESS THIS WEB PAGE AS PER THE DOT
+                            COMPLIANCE**</h6>
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- If you prefer jQuery these are the required scripts -->
+<script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/vendor.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+
+<script src="{% static 'ckeditor/ckeditor/adapters/jquery.js' %}"></script>
+<script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+
+<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'js/buttons.flash.min.js' %}"></script>
+<!--<script src="{% static 'js/jszip.min.js' %}"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="{% static 'js/pdfmake.min.js' %}"></script>
+<script src="{% static 'js/vfs_fonts.js' %}"></script>
+<script src="{% static 'js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'js/buttons.print.min.js' %}"></script>
+
+<script>
+
+    CKEDITOR.config.readOnly = true;
+
+    $('#conquest_id').change(function () {
+        $('#conquest_user_list').empty();
+        conq_id = $("#conquest_id option:selected").text();
+
+        if(conq_id != "-- Select Knowledge Test Title --")
+            {
+                $('#kc_id').text("");
+                $('#kc_agent').text("");
+                $('#kc_timestamp').text("");
+                $('#kc_deadline').text("");
+                $('#kc_attempt').text("");
+                $('#kc_agent_attempt').text("");
+                $('#kc_p_score').text("");
+                $('#kc_agent_score').text("");
+                $('#kc_q_count').text("");
+                $('#kc_comp_rate').text("");
+                $('#kc_sender').text("");
+                $('#kc_subprocess').text("");
+                $('#pkt').hide();
+                $('#eval_btn').hide();
+
+                $('#loading').show();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'conquest_user_list' %}",
+                    data: {
+                        conquest_id: conq_id,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#loading').hide();
+                        kc_user_details = data['conquest_user_list'];
+                        for (var i = 0; i < kc_user_details.length; i++) {
+
+                            if (kc_user_details[i].status != "na") {
+                                var card_div = document.createElement('div');
+                                card_div.setAttribute("class", "aside-link");
+                                card_div.setAttribute("data-value", "users");
+                                card_div.setAttribute("onclick", "show_details(this)");
+
+                                var div_col = document.createElement('div');
+                                card_div.appendChild(div_col);
+                                div_col.setAttribute("class", "col pl-2 pr-2 pb-2");
+
+                                var div_row = document.createElement('div');
+                                div_col.appendChild(div_row);
+                                div_row.setAttribute("class", "row");
+
+                                var div_col1 = document.createElement('div');
+                                div_row.appendChild(div_col1);
+                                div_col1.setAttribute("class", "col-lg-12");
+
+                                var span_user_email = document.createElement('span');
+                                div_col1.appendChild(span_user_email);
+                                span_user_email.setAttribute("style", "font-size:9px");
+                                span_user_email.innerHTML = kc_user_details[i].user_email;
+
+                                var div_row2 = document.createElement('div');
+                                div_col.appendChild(div_row2);
+                                div_row2.setAttribute("class", "row");
+
+                                var div_col2 = document.createElement('div');
+                                div_row2.appendChild(div_col2);
+                                div_col2.setAttribute("class", "col-lg-4");
+
+                                var span_status = document.createElement('span');
+                                div_col2.appendChild(span_status);
+                                span_status.setAttribute("style", "font-size:55%");
+                                span_status.innerHTML = "Status";
+
+                                var div_col3 = document.createElement('div');
+                                div_row2.appendChild(div_col3);
+                                div_col3.setAttribute("class", "col-lg-8");
+
+                                var span_status_tag = document.createElement('span');
+                                div_col3.appendChild(span_status_tag);
+                                if (kc_user_details[i].status == "pending") {
+                                    /*card_div.setAttribute("style", "background-color:#950b2f; color:#000000");*/
+                                    span_status_tag.setAttribute("style", "font-size:50%; font-weight: 600");
+                                    span_status_tag.innerHTML = "Pending";
+                                } else {
+                                    /*card_div.setAttribute("style", "background-color:#2c9100; color:#000000");*/
+                                    span_status_tag.setAttribute("style", "font-size:50%; font-weight: 600");
+                                    span_status_tag.innerHTML = "Checked";
+                                }
+
+                                var div_divider = document.createElement('div');
+                                card_div.appendChild(div_divider);
+                                div_divider.setAttribute("class", "dropdown-divider");
+                                div_divider.setAttribute("style", "background-color:#000000");
+
+                                document.getElementById('conquest_user_list').appendChild(card_div);
+                            }
+                        }
+                    }
+                });
+            }
+    });
+
+    function show_details(e)
+    {
+        user_email = e.querySelector('span').innerText;
+        id = $("#conquest_id option:selected").text();
+
+        document.getElementById('conquest_user_list').querySelectorAll('div[data-value]')
+            .forEach((e) => {
+				e.removeAttribute("class");
+				e.setAttribute("class", "aside-link");
+            });
+
+        e.setAttribute("class", "aside-link active");
+
+        $('#kc_id').text("");
+        $('#kc_agent').text("");
+        $('#kc_timestamp').text("");
+        $('#kc_deadline').text("");
+        $('#kc_attempt').text("");
+        $('#kc_agent_attempt').text("");
+        $('#kc_p_score').text("");
+        $('#kc_agent_score').text("");
+        $('#kc_q_count').text("");
+        $('#kc_comp_rate').text("");
+        $('#kc_sender').text("");
+        $('#kc_subprocess').text("");
+        $('#pkt').hide();
+        $('#eval_btn').hide();
+
+        $('#loading').show();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'conquest_user_data' %}",
+            data: {
+                conquest_id: id,
+                user_email: user_email,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (dataset) {
+                kc_user_q_details = dataset['kc_user_q_details'];
+                kc_user_details   = dataset['kc_user_details'];
+                kc_details        = dataset['kc_details'];
+
+                $('#kc_id').text(id);
+                $('#kc_agent').text(user_email);
+                $('#kc_timestamp').text(kc_details[0].timestamp);
+                $('#kc_deadline').text(kc_details[0].deadline);
+                $('#kc_attempt').text(kc_details[0].max_attempts);
+                $('#kc_agent_attempt').text(kc_user_details[0].attempts);
+                $('#kc_p_score').text(kc_details[0].passing_score);
+                $('#kc_agent_score').text(kc_user_details[0].score);
+                $('#kc_q_count').text(kc_details[0].questions_count);
+                $('#kc_comp_rate').text(kc_details[0].completion_rate);
+                $('#kc_sender').text(kc_details[0].sender);
+                $('#kc_subprocess').text(kc_details[0].sub_process);
+
+                document.getElementById('pkt').innerHTML = "";
+                create_question_div(dataset);
+
+                $('#loading').hide();
+            }
+        });
+    }
+
+    function create_question_div(dataset) {
+        ques_details        = dataset['question_details'];
+        options_list        = dataset['question_op_list'];
+        kc_user_q_details   = dataset['kc_user_q_details'];
+        kc_user_details     = dataset['kc_user_details'];
+        kc_details          = dataset['kc_details'];
+
+        options_arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                       'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+        for (var a = 0; a < ques_details.length; a++) {
+            var main_div = document.createElement('div');
+            main_div.setAttribute("class", "row ml-2 mr-2 mt-2 mb-4");
+            main_div.setAttribute("ques_id", +ques_details[a].id);
+            main_div.setAttribute("style", "background-image: linear-gradient(to top, #eef1f5, #e6e9f0, #eef1f5); border-radius: .25rem");
+
+            var col_question_details = document.createElement('div');
+            main_div.appendChild(col_question_details);
+            col_question_details.setAttribute("class", "col-lg-12 mt-2");
+
+            var col_ques_grid = document.createElement('div');
+            col_question_details.appendChild(col_ques_grid);
+            col_ques_grid.setAttribute("class", "card mb-grid");
+            col_ques_grid.setAttribute("style", "border-radius: .25rem");
+
+            var col_ques_header = document.createElement('div');
+            col_ques_grid.appendChild(col_ques_header);
+            col_ques_header.setAttribute("class", "card-header");
+            col_ques_header.setAttribute("style", "color: #ffffff");
+            col_ques_header.setAttribute("style", "background-color: #fdfcfb; border-radius: .25rem");
+
+            var col_ques_no = document.createElement('div');
+            col_ques_header.appendChild(col_ques_no);
+            col_ques_no.setAttribute("class", "ml-3");
+            col_ques_no.setAttribute("style", "font-size:13px; font-weight:600");
+            col_ques_no.innerHTML = "Question No : " + (a + 1);
+
+            var col_ques_type = document.createElement('div');
+            col_ques_header.appendChild(col_ques_type);
+            col_ques_type.setAttribute("class", "ml-3");
+            col_ques_type.setAttribute("style", "font-size:13px; font-weight:600");
+            col_ques_type.innerHTML = "Question Type : " + ques_details[a].type;
+
+            if(ques_details[a].media_type == "Audio")
+            {
+                var audio_player = document.createElement('audio');
+                col_ques_header.appendChild(audio_player);
+                audio_player.controls = true;
+                audio_player.setAttribute("controlsList", "nodownload");
+
+                    var audio_source1 = document.createElement('source');
+                    audio_player.appendChild(audio_source1);
+                    audio_source1.setAttribute("src", ques_details[a].media_url);
+                    audio_source1.setAttribute("type", "audio/ogg");
+
+                    var audio_source2 = document.createElement('source');
+                    audio_player.appendChild(audio_source2);
+                    audio_source2.setAttribute("src", ques_details[a].media_url);
+                    audio_source2.setAttribute("type", "audio/mp3");
+
+                    var audio_source3 = document.createElement('source');
+                    audio_player.appendChild(audio_source3);
+                    audio_source3.setAttribute("src", ques_details[a].media_url);
+                    audio_source3.setAttribute("type", "audio/ogg");
+
+            }
+            else
+            {
+                if(ques_details[a].media_type != "No Media")
+                {
+                    var download_a_tag = document.createElement('a');
+                    col_ques_header.appendChild(download_a_tag);
+                    download_a_tag.setAttribute("href", ques_details[a].media_url);
+                    download_a_tag.setAttribute("class", "ml-3");
+                    download_a_tag.download = ques_details[a].media_type + "_" + ques_details[a].type ;
+
+                        var download_button = document.createElement('button');
+                        download_a_tag.appendChild(download_button);
+                        download_button.setAttribute("class","btn btn-sm btn-labeled btn-dark");
+
+                            var download_span = document.createElement('span');
+                            download_button.appendChild(download_span);
+                            download_span.setAttribute("class", "btn-label");
+
+                                var download_span_img = document.createElement('span');
+                                download_span.appendChild(download_span_img)
+                                download_span_img.setAttribute("class", "oi oi-cloud-download" );
+                                download_span_img.setAttribute("aria-hidden", "true");
+
+                            var download_span_text = document.createElement('span');
+                            download_button.appendChild(download_span_text);
+                            download_span_text.setAttribute("class", "btn-text");
+                            download_span_text.innerHTML = "Download "+ques_details[a].media_type;
+                }
+            }
+
+            var form_1_div_editor = document.createElement('div');
+            col_ques_header.appendChild(form_1_div_editor);
+            form_1_div_editor.setAttribute("class", "col-lg-12 mt-1");
+            form_1_div_editor.setAttribute("itemtype", "editor_col");
+            var editor = document.createElement('textarea');
+            form_1_div_editor.append(editor);
+            $(editor).val(ques_details[a].question).ckeditor({
+                customConfig: 'custom_toolbar/config.js',
+            });
+
+            var col_ques_body = document.createElement('div');
+            col_ques_grid.appendChild(col_ques_body);
+            col_ques_body.setAttribute("class", "card-body")
+
+            var col_ques_body_row = document.createElement('div');
+            col_ques_body.appendChild(col_ques_body_row);
+            col_ques_body_row.setAttribute("class", "row");
+
+            var col_ques_body_col = document.createElement('div');
+            col_ques_body_row.appendChild(col_ques_body_col);
+            col_ques_body_col.setAttribute("class", "col-lg-12");
+            col_ques_body_col.setAttribute("op_tag", "q_option");
+
+            var answer = "";
+            var u_answer = "";
+            answer_arr = [];
+            t_op = 0;
+            val = 0;
+            user_question_id = 0;
+
+            for (var u_q = 0; u_q < ques_details.length; u_q++)
+                {
+                    if (!Number.isInteger(ques_details[a].id))
+                    {
+                      ques_details[a].id = parseInt(ques_details[a].id);
+                    }
+
+                    if (!Number.isInteger(kc_user_q_details[u_q].question_id))
+                    {
+                      kc_user_q_details[u_q].question_id = parseInt(kc_user_q_details[u_q].question_id);
+                    }
+
+                    if(ques_details[a].id == kc_user_q_details[u_q].question_id)
+                        {
+                            user_question_id = u_q;
+                            if(ques_details[a].type == "Subjective")
+                            {
+                                user_answer = JSON.stringify(kc_user_q_details[u_q].answers);
+                            }
+                            else
+                            {
+                                user_answer = JSON.parse(kc_user_q_details[u_q].answers);
+                            }
+                        }
+                }
+
+            for (var b = 0; b < options_list.length; b++)
+                {
+                if (ques_details[a].id == options_list[b].question_id)
+                    {
+                    val++;
+                    var col_ques_option = document.createElement('div');
+                    col_ques_body_col.appendChild(col_ques_option);
+                    col_ques_option.setAttribute("class", "form-check")
+
+                    var span_option = document.createElement('span');
+                    col_ques_option.appendChild(span_option);
+
+                     if(ques_details[a].type != "Subjective")
+                        {
+                            t_op++;
+                            if(options_list[b].question_answer == "yes")
+                                {
+                                    answer_arr.push(val);
+                                    answer = answer + options_arr[val-1] + ", ";
+                                }
+                            var input_option = document.createElement('input');
+                            span_option.appendChild(input_option);
+                            input_option.setAttribute("class", "form-check-input");
+                            input_option.setAttribute("type", "radio");
+                            if (ques_details[a].type == "MAQs") {
+                                input_option.setAttribute("name", "ques" + b);
+                            } else {
+                                input_option.setAttribute("name", "question" + a);
+                            }
+                            var label = document.createElement('label');
+
+                            label.innerHTML = "(" + options_arr[val-1] + ") " + options_list[b].question_option;
+
+                            if(user_answer.includes(val))
+                                {
+                                    input_option.checked = true;
+                                    u_answer = u_answer + options_arr[val-1] + ", ";
+                                }
+                            input_option.disabled = true;
+
+                            span_option.appendChild(label);
+                        }
+                    else
+                        {
+                            answer = options_list[b].question_answer;
+                            q_subj_div_form_div = document.createElement('div');
+                            span_option.appendChild(q_subj_div_form_div);
+                            q_subj_div_form_div.setAttribute("class", "form-group");
+                            q_subj_div_form_div.setAttribute("align", "left");
+
+                                q_subj_div_form_div_label1 = document.createElement('label');
+                                q_subj_div_form_div.appendChild(q_subj_div_form_div_label1);
+                                q_subj_div_form_div_label1.setAttribute("for", "subjective_answer");
+                                q_subj_div_form_div_label1.setAttribute("style", "font-size:12px; font-weight:600");
+                                q_subj_div_form_div_label1.innerHTML = "Answer";
+
+                                q_subj_div_form_div_textarea = document.createElement('textarea');
+                                q_subj_div_form_div.appendChild(q_subj_div_form_div_textarea);
+                                q_subj_div_form_div_textarea.setAttribute("class", "form-control");
+                                q_subj_div_form_div_textarea.setAttribute("id", "subjective_answer");
+                                q_subj_div_form_div_textarea.setAttribute("maxlength", "750");
+                                q_subj_div_form_div_textarea.setAttribute("rows", "4");
+                                q_subj_div_form_div_textarea.innerHTML = user_answer;
+                                q_subj_div_form_div_textarea.disabled = true;
+
+                                q_subj_div_form_div_label2 = document.createElement('label');
+                                q_subj_div_form_div.appendChild(q_subj_div_form_div_label2);
+                                q_subj_div_form_div_label2.setAttribute("id", "count");
+                                q_subj_div_form_div_label2.setAttribute("style", "font-size:12px");
+                        }
+                    }
+                }
+
+            marks_div = document.createElement('div');
+            col_question_details.appendChild(marks_div);
+            marks_div.setAttribute("class", "pl-4 pr-5 pt-3 pb-2 mb-1");
+            marks_div.setAttribute("id", "marks_div");
+            marks_div.setAttribute("style", "background-image: linear-gradient(to left, #80d0c7, #13547a); border-radius: .25rem");
+
+                var div_row_ques_marks = document.createElement('div');
+                marks_div.appendChild(div_row_ques_marks);
+                div_row_ques_marks.setAttribute("class", "row mt-1");
+
+                    var div_ques_marks_col1 = document.createElement('div');
+                    div_row_ques_marks.appendChild(div_ques_marks_col1);
+                    div_ques_marks_col1.setAttribute("class", "col-lg-2");
+
+                        var div_marks_col1_heading = document.createElement('H6');
+                        div_ques_marks_col1.appendChild(div_marks_col1_heading);
+                        div_marks_col1_heading.setAttribute("class", "mt-2");
+                        div_marks_col1_heading.setAttribute("style", "font-size:12px; font-weight:600; color:#ffffff");
+                        div_marks_col1_heading.innerHTML = "Maximum Marks : ";
+
+                    var div_ques_marks_col2 = document.createElement('div');
+                    div_row_ques_marks.appendChild(div_ques_marks_col2);
+                    div_ques_marks_col2.setAttribute("class", "col-lg-2");
+
+                        var div_marks_col2_heading = document.createElement('H6');
+                        div_ques_marks_col2.appendChild(div_marks_col2_heading);
+                        div_marks_col2_heading.setAttribute("class", "mt-2");
+                        div_marks_col2_heading.setAttribute("id", "max_marks");
+                        div_marks_col2_heading.setAttribute("style", "font-size:12px; font-weight:600; color:#ffffff");
+                        div_marks_col2_heading.innerHTML = ques_details[a].marks;
+
+                var div_row_eval_marks = document.createElement('div');
+                marks_div.appendChild(div_row_eval_marks);
+                div_row_eval_marks.setAttribute("class", "row mt-1");
+
+                    var div_eval_col1 = document.createElement('div');
+                    div_row_eval_marks.appendChild(div_eval_col1);
+                    div_eval_col1.setAttribute("class", "col-lg-1");
+
+                        var div_eval_col1_heading = document.createElement('H6');
+                        div_eval_col1.appendChild(div_eval_col1_heading);
+                        div_eval_col1_heading.setAttribute("class", "mt-2");
+                        div_eval_col1_heading.setAttribute("style", "font-size:12px; font-weight:600; color:#ffffff");
+                        div_eval_col1_heading.innerHTML = "Evaluated Marks : ";
+
+                    var div_eval_col2 = document.createElement('div');
+                    div_row_eval_marks.appendChild(div_eval_col2);
+                    div_eval_col2.setAttribute("class", "col-lg-2");
+
+                        var div_eval_col2_input = document.createElement('input');
+                        div_eval_col2.appendChild(div_eval_col2_input);
+                        div_eval_col2_input.setAttribute("type", "text");
+                        div_eval_col2_input.setAttribute("data-value", "agent_marks");
+                        div_eval_col2_input.setAttribute("maxlength", "3");
+                        div_eval_col2_input.setAttribute("onkeypress", "return isNumberKey(event)");
+                        div_eval_col2_input.setAttribute("class", "form-control");
+                        div_eval_col2_input.setAttribute("aria-describedby", "emailHelp");
+                        div_eval_col2_input.setAttribute("placeholder", "0-9");
+                        div_eval_col2_input.setAttribute("autocomplete", "off");
+
+            ans_div = document.createElement('div');
+            col_question_details.appendChild(ans_div);
+            ans_div.setAttribute("class", "pl-4 pr-5 pt-3 pb-2 mb-4");
+            ans_div.setAttribute("style", "background-color: #56ab2f; border-radius: .25rem");
+
+                ans_heading = document.createElement('h6');
+                ans_div.appendChild(ans_heading);
+                ans_heading.setAttribute("style", "font-size:12px; font-weight:600; color:#ffffff");
+                ans_heading.innerHTML = "Correct Answer(s):";
+
+                ans_detail = document.createElement('h6');
+                ans_div.appendChild(ans_detail);
+                ans_detail.setAttribute("class", "mt-2");
+                ans_detail.setAttribute("style", "font-size:14px; color:#ffffff");
+                ans_detail.innerHTML = answer;
+
+            if(ques_details[a].type != "Subjective")
+                {
+                    if(ques_details[a].type == "MAQs")
+                    {
+                            q_max_marks         = ques_details[a].marks;
+                            t_q_op              = t_op;
+                            t_q_correct_op_arr  = answer_arr;
+                            t_q_correct_op      = answer_arr.length;
+                            t_u_op_selected_arr = JSON.parse(kc_user_q_details[user_question_id].answers);
+                            t_u_op_selected     = (JSON.parse(kc_user_q_details[user_question_id].answers)).length;
+                            t_u_correct_op      = 0;
+                            t_u_incorrect_op    = 0;
+                            if (t_u_op_selected > t_q_correct_op)
+                                t_extra_op_selected = t_u_op_selected - t_q_correct_op;
+                            else
+                                t_extra_op_selected = 0;
+
+                            user_q_marks = 0;
+
+                            if (t_q_op != t_u_op_selected)
+                            {
+                                for(var op_eval = 0; op_eval < t_u_op_selected; op_eval++)
+                                 {
+                                    if (t_q_correct_op_arr.includes(t_u_op_selected_arr[op_eval]))
+                                        t_u_correct_op = t_u_correct_op + 1;
+                                    else
+                                        t_u_incorrect_op = t_u_incorrect_op + 1;
+                                 }
+
+                                user_q_marks = (((t_u_op_selected - t_u_incorrect_op) * q_max_marks) / t_q_correct_op) - (t_extra_op_selected / t_q_op);
+                            }
+
+                            div_eval_col2_input.value = user_q_marks;
+                    }
+                    else
+                    {
+                        if(answer == u_answer)
+                            div_eval_col2_input.value = ques_details[a].marks;
+                        else
+                            div_eval_col2_input.value = "0";
+                    }
+                }
+
+            document.getElementById('pkt').appendChild(main_div);
+        }
+
+        $('#pkt').show();
+            if(kc_user_details[0].status == "pending")
+                {
+                     $('#eval_btn').show();
+                }
+            else
+                {
+                     $('#eval_btn').hide();
+                }
+    }
+
+    $('#submit_kc').on('click', function () {
+
+        var conquest_id = $('#kc_id').text();
+        var agent_id    = $('#kc_agent').text();
+        sender = document.getElementById('kc_sender').innerText;
+
+        if (conquest_id == "") {
+            alert("Please Select the Agent from list for Test Evaluation");
+        } else {
+
+            check = 0;
+
+            q_count = document.getElementById('kc_q_count').innerText;
+            max_marks = 0;
+            agent_marks = 0;
+
+            for (var c = 0; c < q_count; c++) {
+                 max_marks = max_marks + parseFloat(document.querySelectorAll('#pkt > div')[c].querySelector('#marks_div #max_marks').innerText);
+                 eval_marks = document.querySelectorAll('#pkt > div')[c].querySelector('#marks_div [data-value = "agent_marks"]').value;
+                 if(eval_marks == "")
+                 {
+                    alert("Please provide marks for all the questions");
+                    check = 1;
+                    return;
+                 }
+                 else
+                 {
+                     agent_marks = agent_marks + parseFloat(eval_marks);
+                 }
+            }
+
+            agent_percentage = ((agent_marks/max_marks)*100).toFixed(2);
+            if(agent_percentage > 100)
+            {
+                alert("Please provide evaluation marks less than maximum marks");
+                check = 1;
+                return;
+            }
+
+            if (check == 0) {
+                $('#loading').show();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'user_kc_eval' %}",
+                    data: {
+                        conquest_id: conquest_id,
+                        agent_id: agent_id,
+                        agent_score: agent_percentage,
+                        sender: sender,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        alert('Knowledge Test is successfully Evaluated, Thank You!!');
+                        window.location = "";
+                        $('#loading').hide();
+                    }
+                });
+            }
+        }
+    });
+
+    function hide_message() {
+        $('#pkt').hide();
+         $('#eval_btn').hide();
+    }
+
+    function hideLoader() {
+        $('#loading').hide();
+    }
+
+    $(window).ready(hideLoader);
+
+    function isNumberKey(evt)
+       {
+          var charCode = (evt.which) ? evt.which : evt.keyCode;
+          if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+             return false;
+
+          return true;
+       }
+
+</script>
+
+</body>
+</html>

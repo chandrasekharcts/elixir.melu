@@ -1,0 +1,1402 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Elixir Web | Reporting</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="icon" href="{% static 'images/favicon.png'  %}" type="image/png">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" media="screen"/>
+
+</head>
+<body onload="accountList()">
+<div class="main-container">
+    <nav class="navbar navbar-expand justify-content-between fixed-top">
+        <a class="navbar-brand mb-0 h1 d-none d-md-block" href="/dashboard/">
+            <img src="{% static 'images/logo.png' %}" class="navbar-brand-image d-inline-block align-top mr-2" alt="">
+            <small>Elixir <small>v3.0.1</small> </small>
+        </a>
+
+        <a class="navbar-brand mb-0 h1 d-none d-md-block">
+            <img src="{% static 'images/newcts.png' %}" class="pb-2">
+        </a>
+
+        <div class="d-flex flex-1 d-block d-md-none">
+            <a href="#" class="sidebar-toggle ml-3">
+                <i data-feather="menu"></i>
+            </a>
+        </div>
+
+        <ul class="navbar-nav d-flex justify-content-end mr-2">
+            <li class="sidebar-nav-item mt-1">
+                <a class="sidebar-nav-link">
+                  <span class="sidebar-nav-name">
+                    <b style="font-family: Arial Rounded MT">{{ user.first_name }} {{ user.last_name }}</b>
+                  </span>
+                </a>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link avatar-with-name" id="navbarDropdownMenuLink" data-toggle="dropdown" href="#">
+                    <img src="{% static 'images/user_icon.png' %}" class="d-inline-block align-top" alt="">
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                    {% if user.email != 'agent' %}
+                    <a class="dropdown-item text-danger" href="/version_history/">Version History</a>
+                    {% endif %}
+                    <a class="dropdown-item text-danger" href="/account/logout/">Logout</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- expand-hover push -->
+    <!-- Sidebar -->
+    <div class="main-sidebar expand-hover push">
+        <ul class="sidebar-nav">
+
+            <!-- Dashboard -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="home"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Dashboard
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+
+            <!-- Reporting -->
+            {% if user.email != 'agent' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/reporting/" class="sidebar-nav-link active">
+              <span class="sidebar-nav-icon">
+                <i data-feather="airplay"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Reporting
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- My Task -->
+            {% if user.email == 'agent' or user.email == 'superuser' %}
+            <li class="sidebar-nav-item">
+                <a class="sidebar-nav-link collapsed" data-toggle="collapse" href="#mytask" aria-expanded="false"
+                   aria-controls="example">
+                    <span class="sidebar-nav-icon">
+                        <i data-feather="grid"></i>
+                    </span>
+                    <span class="sidebar-nav-name">
+                        My Tasks
+                    </span>
+                    <span class="sidebar-nav-end">
+                            <i data-feather="chevrons-right" class="nav-collapse-icon"></i>
+                    </span>
+                </a>
+
+                <ul class="sidebar-sub-nav collapse" id="mytask">
+                    <li class="sidebar-nav-item">
+                        <a href="/dashboard/mytasks_up_kc/" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">
+                                <i data-feather="server"></i>
+                                <i data-feather="clipboard"></i>
+                            </span>
+                            <span class="sidebar-nav-name">
+                            Update + Knowledge Test
+                            </span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="/dashboard/mytasks_kc/" class="sidebar-nav-link">
+                            <span class="sidebar-nav-icon">
+                                <i data-feather="clipboard"></i>
+                            </span>
+                            <span class="sidebar-nav-name">
+                                Knowledge Test
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
+
+            <!-- Knowledge Test Evaluation -->
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/knowledge-check-evaluation/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="file-text"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Evaluation
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- Divider Start -->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End -->
+
+            <!-- Updates Repository -->
+            {% if user.email != 'agent' %}
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/elixir/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="server"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Updates Repository
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Create New Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-new-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="edit"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create new Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- All Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/all-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="align-justify"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                All Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sent Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sent-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="chevrons-up"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sent Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Pending Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/pending-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="alert-circle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Pending Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Acknowledged Update -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/acknowledged-update/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="check-circle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Acknowledged Update
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+
+            {% if user.email != 'agent' %}
+            <!-- Knowledge Test Repository -->
+            <li class="sidebar-nav-item">
+
+                <a href="/dashboard/conquest/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="clipboard"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Repository
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Question Bank -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/question_bank/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="briefcase"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Question Bank
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Knowledge Test Result -->
+            <li class="sidebar-nav-item">
+
+                <a href="/dashboard/conquest_response/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="book"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Knowledge Test Result
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="file-plus"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create Knowledge Test
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create a Question -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/create-a-question/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="edit-3"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create a Question
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- All Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/all-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="copy"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                        All Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sent Knowledge Test-->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sent-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="arrow-up-right"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sent Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Pending Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/pending-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="alert-triangle"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Pending Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Completed Knowledge Test -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/completed-knowledge-check/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="check-square"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Completed Knowledge Test <br><span style="font-size : 10px"> ( w/o update ) </span>
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+            {% if user.email == 'poc' or user.email == 'superuser' %}
+            <!-- Update Source -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/update_source_type/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="cpu"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Update Source
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Update Type -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/update_type/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="maximize-2"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Update Type
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Users -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/users/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="user"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Users
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Sub Process -->
+            <li class="sidebar-nav-item">
+                <a href="/dashboard/sub_process/" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="users"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Sub Process
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-2"></div>
+            </li>
+
+
+            <!-- Divider End-->
+            {% endif %}
+
+            {% if user.email == 'superuser' %}
+            <!-- Add Accounts -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listAccount' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="package"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Add Accounts
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Add Projects -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listProject' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="layers"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Add Projects
+              </span>
+                    <span class="sidebar-nav-end"></span>
+                </a>
+            </li>
+
+            <!-- Create Admin -->
+            <li class="sidebar-nav-item">
+                <a href="{% url 'listAdmin' %}" class="sidebar-nav-link">
+              <span class="sidebar-nav-icon">
+                <i data-feather="award"></i>
+              </span>
+                    <span class="sidebar-nav-name">
+                Create Admin
+              </span>
+                    <span class="sidebar-nav-end">
+              </span>
+                </a>
+            </li>
+
+            <!-- Divider Start-->
+            <li class="sidebar-nav-item">
+                <div class="dropdown-divider ml-5 mr-5 mt-2 mb-5"></div>
+            </li>
+            <!-- Divider End-->
+            {% endif %}
+
+        </ul>
+    </div>
+    <!-- Sidebar End -->
+
+    <!-- Main-content-aside -->
+    <div class="main-content">
+
+        <div class="main-main-content">
+
+            <div id="loading">
+                <img src="{% static 'images/4105180.gif' %}" class="ajax-loader"/>
+            </div>
+
+            <div class="container-fluid">
+
+                {% if user.email != 'agent' %}
+                <div class="row mb-2 mt-1">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <h6 style="font-size:11px; font-weight:600">Account Name</h6>
+                            <select name="select" class="form-control js-choice" id="account_list_dd">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <h6 style="font-size:11px; font-weight:600">Project Name</h6>
+                            <select name="select" class="form-control js-choice" id="project_name_dd">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <h6 style="font-size:11px; font-weight:600">Pick Date Range</h6>
+                            <input id="pick_date" class="form-control mb-2 date-default" type="text"
+                                   placeholder="Pick Date Range" autocomplete="off">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="card mb-grid text-center">
+                            <div class="card-header">
+                                <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active pb-3" id="card-tab-1" data-toggle="tab"
+                                           href="#card-tab-content-1" role="tab" aria-controls="card-tab-content-1"
+                                           aria-selected="true" style="font-size:11px; font-weight:600">Updates
+                                            Report</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link pb-3" id="card-tab-2" data-toggle="tab"
+                                           href="#card-tab-content-2"
+                                           role="tab" aria-controls="card-tab-2" aria-selected="false"
+                                           style="font-size:11px; font-weight:600">Knowledge Test Report</a>
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="tab-content">
+
+                                    <div class="tab-pane fade show active" id="card-tab-content-1" role="tabpanel"
+                                         aria-labelledby="card-tab-1" align="left">
+
+                                        <div class="card mb-grid">
+                                            <div class="table-responsive-md" id="reporting_table_1_div">
+                                                <table class="table table-actions table-striped table-hover mb-0 mt-3"
+                                                       data-table id="reporting_table_1">
+                                                    <thead>
+                                                    <tr>
+                                                        <th scope="col" style="font-size:11px; font-weight:600">#</th>
+                                                        <th scope="col" style="font-size:11px; font-weight:600">
+                                                            Emp_Id
+                                                        </th>
+                                                        <th scope="col" style="font-size:11px; font-weight:600">
+                                                            Emp_Email
+                                                        </th>
+                                                        <th scope="col" style="font-size:11px; font-weight:600">
+                                                            Total
+                                                        </th>
+                                                        <th scope="col" style="font-size:11px; font-weight:600">
+                                                            Pending
+                                                        </th>
+                                                        <th scope="col" style="font-size:11px; font-weight:600">
+                                                            Acknowledged
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="emp_update_details_table">
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="tab-pane fade" id="card-tab-content-2" role="tabpanel"
+                                         aria-labelledby="card-tab-2" align="left">
+                                        <div class="card mb-grid">
+                                            <div class="table-responsive-md" id="reporting_table_2_div">
+                                                <table class="table table-actions table-striped table-hover mb-0 mt-3"
+                                                       id="reporting_table_2"
+                                                       data-table>
+                                                    <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">Emp_Id</th>
+                                                        <th scope="col">Emp_Email</th>
+                                                        <th scope="col"></th>
+                                                        <th scope="col">Total</th>
+                                                        <th scope="col">Pending</th>
+                                                        <th scope="col">Completed</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="emp_kc_details_table">
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal: modalCart -->
+                <div class="modal fade" id="emp_update_details" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl" style="max-width: 900px"  role="document">
+                        <div class="modal-content">
+                            <!--Header-->
+                            <div class="modal-header">
+                                <div class="row">
+                                    <div class="col">
+                                        <h6 style="font-size:20px; font-weight:600" class="modal-title">Updates
+                                            List</h6>
+                                    </div>
+                                </div>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <!--Body-->
+                            <div class="modal-body" id="emp_update_list_table_div">
+                                <table class="table table-actions table-striped table-hover mb-0"
+                                       id="emp_update_list_table"
+                                       data-table>
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Id</th>
+                                        <th>Title</th>
+                                        <th>Acknowledgement</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="emp_update_list_table_body">
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <!--Footer-->
+                            <div class="modal-footer">
+                                <label style="font-size:10px; font-weight:600"> Elixir v3.0.1</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal: modalCart -->
+
+                <!-- Modal: modalCart -->
+                <div class="modal fade" id="emp_kc_details" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl" style="max-width: 900px"  role="document">
+                        <div class="modal-content">
+                            <!--Header-->
+                            <div class="modal-header">
+                                <div class="row">
+                                    <div class="col">
+                                        <h6 style="font-size:20px; font-weight:600" class="modal-title">Knowledge Test
+                                            List</h6>
+                                    </div>
+                                </div>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <!--Body-->
+                            <div class="modal-body" id="emp_kc_list_table_div">
+                                <table class="table table-actions table-striped table-hover mb-0"
+                                       id="emp_kc_list_table"
+                                       data-table>
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Id</th>
+                                        <th>Attempts</th>
+                                        <th>Score</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="emp_kc_list_table_body">
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <!--Footer-->
+                            <div class="modal-footer">
+                                <label style="font-size:10px; font-weight:600"> Elixir v3.0.1</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal: modalCart -->
+
+                <!-- Modal: modalCart -->
+                <div class="modal fade" id="analytics" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-xl" style="max-width: 900px"  role="document">
+                        <div class="modal-content">
+                            <!--Header-->
+                            <div class="modal-header">
+                                <div class="row">
+                                    <div class="col">
+                                        <h6 style="font-size:15px" class="modal-title">Associate Knowledge Test
+                                            Analytics</h6>
+                                    </div>
+                                </div>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <!--Body-->
+                            <div class="modal-body" style="overflow-y: hidden; height: 500px">
+                                <div class="row">
+                                    <div class="col" id="myChart_div" align="center">
+                                        <canvas id="myChart"></canvas>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--Footer-->
+                            <div class="modal-footer">
+                                <label style="font-size:10px; font-weight:600"> Elixir v3.0.1</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal: modalCart -->
+
+                {% else %}
+
+                <div class="row mb-2 mt-1">
+
+                    <div class="col">
+                        <h6 style="font-weight:600">**YOU ARE NOT AUTHORIZED TO ACCESS THIS WEB PAGE AS PER THE DOT
+                            COMPLIANCE**</h6>
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- If you prefer jQuery these are the required scripts -->
+<script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/vendor.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/timer.js' %}"></script>
+
+<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'js/buttons.flash.min.js' %}"></script>
+<!--<script src="{% static 'js/jszip.min.js' %}"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="{% static 'js/pdfmake.min.js' %}"></script>
+<script src="{% static 'js/vfs_fonts.js' %}"></script>
+<script src="{% static 'js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'js/buttons.print.min.js' %}"></script>
+<script src="{% static 'js/charts/Chart.js' %}"></script>
+
+<script>
+
+        function barcharts(kc_tests, analytics)
+        {
+            $('#myChart').remove();
+            $('#myChart_div').append('<canvas id="myChart"></canvas>');
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: kc_tests,
+                    datasets: [{
+                        lineTension: 0,
+                        data: analytics,
+                        backgroundColor: 'rgba(0,123,255, 0.25)',
+                        borderColor: '#007bff',
+                        borderWidth: 4,
+                        pointBackgroundColor: '#007bff'
+                    }]
+                },
+                options: {
+                    legend: {
+                        display: false
+                    },
+                }
+            });
+        }
+
+    flatpickr(".date-default", {
+        allowInput: true,
+        dateFormat: "d-m-Y",
+        mode: "range",
+        maxDate: "today",
+    });
+
+    function accountList() {
+        $('#loading').show();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'user_account_list' %}",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#loading').hide();
+                acc_list = data['acc_name']
+                $('#account_list_dd').html('');
+                $('#account_list_dd').append('<option value="0">' + "-- Select Account --" + '</option>');
+                for (var i = 0; i < acc_list.length; i++) {
+                    $('#account_list_dd').append($('<option>', {
+                        value: i + 1,
+                        text: acc_list[i].account_name
+                    }));
+                }
+            }
+        });
+    }
+
+    $("#account_list_dd").change(function () {
+        $('#pick_date').val("");
+        $acc_name = $("#account_list_dd option:selected").text();
+
+        $('#loading').show();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'user_project_list' %}",
+            data: {
+                account_name: $acc_name,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#loading').hide();
+                project_list = data['proj_name']
+                $('#project_name_dd').html('');
+                $('#project_name_dd').append('<option value="0">' + "-- Select Project --" + '</option>');
+                for (var i = 0; i < project_list.length; i++) {
+                    $('#project_name_dd').append($('<option>', {
+                        value: i + 1,
+                        text: project_list[i].project_name
+                    }));
+                }
+            }
+        });
+    });
+
+    $('#pick_date').change(function () {
+        if ($('#pick_date').val().length == 24) {
+            var startdate = $('#pick_date').val().substring(0, 10);
+            var enddate = $('#pick_date').val().substring(14, 24);
+            var account = $("#account_list_dd option:selected").text();
+            var project = $("#project_name_dd option:selected").text();
+
+            if (account == "-- Select Account --") {
+                alert('Please Select the Account');
+            } else if (project == "-- Select Project --") {
+                alert('Please Select the Project');
+            } else {
+                $('#loading').show();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'reporting_data_filter' %}",
+                    data: {
+                        start_date: startdate,
+                        end_date: enddate,
+                        project_name: project,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    dataType: 'json',
+                    success: function (dataset) {
+                        $('#loading').hide();
+                        data = dataset['employee_details']
+
+                        $('#reporting_table_1_div').html('');
+                        $('#reporting_table_1_div')
+                        .append('<table class="table table-actions table-striped table-hover mb-0 mt-3" id="reporting_table_1" data-table>' +
+                        '<thead>' +
+                            '<tr>' +
+                                '<th scope="col" style="font-size:11px; font-weight:600">' + "#" + '</th>' +
+                                '<th scope="col" style="font-size:11px; font-weight:600">' + "Emp_ID" + '</th>' +
+                                '<th scope="col" style="font-size:11px; font-weight:600">' + "Emp_Name" + '</th>' +
+                                '<th scope="col" style="font-size:11px; font-weight:600">' + "Emp_Email" + '</th>' +
+                                '<th scope="col" style="font-size:11px; font-weight:600">' + "Total" + '</th>' +
+                                '<th scope="col" style="font-size:11px; font-weight:600">' + "Pending" + '</th>' +
+                                '<th scope="col" style="font-size:11px; font-weight:600">' + "Acknowledged" + '</th>' +
+                            '</tr>' +
+                            '</thead>' +
+                            '<tbody id="emp_update_details_table">' + '</tbody>' +
+                        '</table>');
+
+                        $('#reporting_table_2_div').html('');
+                        $('#reporting_table_2_div')
+                        .append('<table class="table table-actions table-striped table-hover mb-0 mt-3" id="reporting_table_2" data-table>' +
+                        '<thead>' +
+                            '<tr>' +
+                                '<th scope="col">' + "#" + '</th>' +
+                                '<th scope="col">' + "Emp_Id" + '</th>' +
+                                '<th scope="col">' + "Emp_Name" + '</th>' +
+                                '<th scope="col">' + "Emp_Email" + '</th>' +
+                                '<th scope="col">' + '</th>' +
+                                '<th scope="col">' + "Total" + '</th>' +
+                                '<th scope="col">' + "Pending" + '</th>' +
+                                '<th scope="col">' + "Completed" + '</th>' +
+                            '</tr>' +
+                            '</thead>' +
+                            '<tbody id="emp_kc_details_table">' + '</tbody>' +
+                        '</table>');
+
+                        for (var i = 0; i < data.length; i++) {
+
+                            $('#emp_update_details_table').append('<tr>' +
+                                '<td>' + (i + 1) + '</td>' +
+                                '<td>' + data[i].emp_id + '</td>' +
+                                '<td>' + data[i].emp_name + '</td>' +
+                                '<td>' + data[i].emp_email + '</td>' +
+                                '<td>' +
+                                '<button type="button" data_filter="total" start-date="' + startdate + '" end-date="' + enddate + '" emp_email="' + data[i].emp_email + '" data-toggle="modal" data-target="#emp_update_details" class="btn btn-sm btn-secondary pl-5 pr-5" onclick="modal_up_open(this)">' +
+                                data[i].total_updates + '</button>' +
+                                '</td>' +
+                                '<td>' +
+                                '<button type="button" data_filter="pending" start-date="' + startdate + '" end-date="' + enddate + '" emp_email="' + data[i].emp_email + '" data-toggle="modal" data-target="#emp_update_details" class="btn btn-sm btn-danger pl-5 pr-5" onclick="modal_up_open(this)">' +
+                                data[i].pending_updates + '</button>' +
+                                '</td>' +
+                                '<td>' +
+                                '<button type="button" data_filter="acknowledged" start-date="' + startdate + '" end-date="' + enddate + '" emp_email="' + data[i].emp_email + '" data-toggle="modal" data-target="#emp_update_details" class="btn btn-sm btn-primary pl-5 pr-5" onclick="modal_up_open(this)">' +
+                                data[i].acknowledged_updates + '</button>' +
+                                '</td>' +
+                                '</tr>');
+
+                            $('#emp_kc_details_table').append('<tr>' +
+                                '<td>' + (i + 1) + '</td>' +
+                                '<td>' + data[i].emp_id + '</td>' +
+                                '<td>' + data[i].emp_name + '</td>' +
+                                '<td>' + data[i].emp_email + '</td>' +
+                                '<td>' +
+                                '<button type="button" data_filter="total" start-date="' + startdate + '" end-date="' + enddate + '" emp_email="' + data[i].emp_email + '" data-toggle="modal" data-target="#analytics" class="btn btn-sm btn-info pl-2 pr-2" onclick="modal_analytics_open(this)">' + "Analytics" + '</button>' +
+                                '</td>' +
+                                '<td>' +
+                                '<button type="button" data_filter="total" start-date="' + startdate + '" end-date="' + enddate + '" emp_email="' + data[i].emp_email + '" data-toggle="modal" data-target="#emp_kc_details" class="btn btn-sm btn-secondary pl-5 pr-5" onclick="modal_kc_open(this)">' +
+                                data[i].total_kc + '</button>' +
+                                '</td>' +
+                                '<td>' +
+                                '<button type="button" data_filter="pending" start-date="' + startdate + '" end-date="' + enddate + '" emp_email="' + data[i].emp_email + '" data-toggle="modal" data-target="#emp_kc_details" class="btn btn-sm btn-danger pl-5 pr-5" onclick="modal_kc_open(this)">' +
+                                data[i].pending_kc + '</button>' +
+                                '</td>' +
+                                '<td>' +
+                                '<button type="button" data_filter="completed" start-date="' + startdate + '" end-date="' + enddate + '" emp_email="' + data[i].emp_email + '" data-toggle="modal" data-target="#emp_kc_details" class="btn btn-sm btn-primary pl-5 pr-5" onclick="modal_kc_open(this)">' +
+                                data[i].completed_kc + '</button>' +
+                                '</td>' +
+                                '</tr>');
+                        }
+
+                        $('#reporting_table_1').DataTable({
+                            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                            retrieve: true,
+                            "searching": true,
+                            "paging": true,
+                            "ordering": true,
+                            "info": true,
+                            dom: 'Blfrtip',
+                            buttons: [
+                                {
+                                    extend: 'pdf',
+                                    className: 'btn btn-sm btn-danger mt-2 ml-2'
+                                    },
+                                {
+                                    extend: 'copy',
+                                    className: 'btn btn-sm btn-dark mt-2'
+                                    },
+                                {
+                                    extend: 'csv',
+                                    className: 'btn btn-sm btn-secondary mt-2'
+                                    },
+                                {
+                                    extend: 'excel',
+                                    className: 'btn btn-sm btn-primary mt-2'
+                                    },
+                                {
+                                    extend: 'print',
+                                    className: 'btn btn-sm btn-info mt-2'
+                                    }
+                                    ]
+                        });
+
+                        $('#reporting_table_2').DataTable({
+                            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                            retrieve: true,
+                            "searching": true,
+                            "paging": true,
+                            "ordering": true,
+                            "info": true,
+                            dom: 'Blfrtip',
+                            buttons: [
+                                {
+                                    extend: 'pdf',
+                                    className: 'btn btn-sm btn-danger mt-2 ml-2'
+                                    },
+                                {
+                                    extend: 'copy',
+                                    className: 'btn btn-sm btn-dark mt-2'
+                                    },
+                                {
+                                    extend: 'csv',
+                                    className: 'btn btn-sm btn-secondary mt-2'
+                                    },
+                                {
+                                    extend: 'excel',
+                                    className: 'btn btn-sm btn-primary mt-2'
+                                    },
+                                {
+                                    extend: 'print',
+                                    className: 'btn btn-sm btn-info mt-2'
+                                    }
+                                    ]
+                        });
+                    }
+                });
+            }
+        }
+    });
+
+    function modal_up_open(e) {
+        data_type = e.getAttribute('data_filter');
+        start_date = e.getAttribute('start-date');
+        end_date = e.getAttribute('end-date');
+        emp_email = e.getAttribute('emp_email');
+
+        $('#loading').show();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'reporting_emp_update_list' %}",
+            data: {
+                start_date: start_date,
+                end_date: end_date,
+                emp_email: emp_email,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (dataset) {
+                $('#loading').hide();
+                data = dataset['emp_update_list']
+
+                $('#emp_update_list_table_div').html('');
+                $('#emp_update_list_table_div')
+                .append('<table class="table table-actions table-striped table-hover mb-0" id="emp_update_list_table" data-table>' +
+                            '<thead>' +
+                                '<tr>' +
+                                    '<th>' + "#" + '</th>' +
+                                    '<th>' + "Update_Id" + '</th>' +
+                                    '<th>' + "Title" + '</th>' +
+                                    '<th>' + "Ack_Time" + '</th>' +
+                                    '<th>' + "Ack_Status" + '</th>' +
+                                    '<th>' + "Clarification" + '</th>' +
+                                '</tr>' +
+                            '</thead>' +
+                        '<tbody id="emp_update_list_table_body">' + '</tbody>' +
+                        + '</table>');
+
+                t = 0;
+                p = 0;
+                a = 0;
+
+                for (var i = 0; i < data.length; i++) {
+
+                    ack_status = "";
+
+                    if (data[i].acknowledged_status == "yes") {
+                        ack_status = "YES (I Understood)";
+                    } else if (data[i].acknowledged_status == "no") {
+                        ack_status = "YES (Need Clarification)";
+                    } else {
+                        ack_status = "NA";
+                    }
+
+                    if (data_type == "acknowledged") {
+                        if (data[i].acknowledged_status == "yes" || data[i].acknowledged_status == "no") {
+
+                            if(data[i].acknowledged_status == "yes")
+                            {
+                                $('#emp_update_list_table_body').append('<tr>' +
+                                '<td>' + (a + 1) + '</td>' +
+                                '<td>' + data[i].update_id + '</td>' +
+                                '<td>' + data[i].update_title + '</td>' +
+                                '<td>' + data[i].timestamp + '</td>' +
+                                '<td>' + ack_status + '</td>' +
+                                '<td>' + "-" + '</td>' +
+                                '</tr>');
+                            }
+                            else
+                            {
+                                $('#emp_update_list_table_body').append('<tr>' +
+                                    '<td>' + (a + 1) + '</td>' +
+                                    '<td>' + data[i].update_id + '</td>' +
+                                    '<td>' + data[i].update_title + '</td>' +
+                                    '<td>' + data[i].timestamp + '</td>' +
+                                    '<td>' + ack_status + '</td>' +
+                                    '<td>' + data[i].acknowledged_comment + '</td>' +
+                                    '</tr>');
+                            }
+                            a++;
+                        }
+                    } else if (data_type == "pending") {
+                        if (data[i].acknowledged_status == "NA") {
+                            $('#emp_update_list_table_body').append('<tr>' +
+                                '<td>' + (p + 1) + '</td>' +
+                                '<td>' + data[i].update_id + '</td>' +
+                                '<td>' + data[i].update_title + '</td>' +
+                                '<td>' + "-" + '</td>' +
+                                '<td>' + "-" + '</td>' +
+                                '<td>' + "-" + '</td>' +
+                                '</tr>');
+                            p++;
+                        }
+                    } else {
+
+                        if (ack_status == "NA")
+                        {
+                            $('#emp_update_list_table_body').append('<tr>' +
+                            '<td>' + (t + 1) + '</td>' +
+                            '<td>' + data[i].update_id + '</td>' +
+                            '<td>' + data[i].update_title + '</td>' +
+                            '<td>' + "-" + '</td>' +
+                            '<td>' + "-" + '</td>' +
+                            '<td>' + "-" + '</td>' +
+                            '</tr>');
+                        }
+                        else
+                        {
+                            if (data[i].acknowledged_comment == "NA")
+                            {
+                                $('#emp_update_list_table_body').append('<tr>' +
+                                '<td>' + (t + 1) + '</td>' +
+                                '<td>' + data[i].update_id + '</td>' +
+                                '<td>' + data[i].update_title + '</td>' +
+                                '<td>' + data[i].timestamp + '</td>' +
+                                '<td>' + ack_status + '</td>' +
+                                '<td>' + "-" + '</td>' +
+                                '</tr>');
+                            }
+                            else
+                            {
+                                $('#emp_update_list_table_body').append('<tr>' +
+                                '<td>' + (t + 1) + '</td>' +
+                                '<td>' + data[i].update_id + '</td>' +
+                                '<td>' + data[i].update_title + '</td>' +
+                                '<td>' + data[i].timestamp + '</td>' +
+                                '<td>' + ack_status + '</td>' +
+                                '<td>' + data[i].acknowledged_comment + '</td>' +
+                                '</tr>');
+                            }
+                        }
+                        t++;
+                    }
+                }
+
+                $('#emp_update_list_table').DataTable({
+                    retrieve: true,
+                    "searching": false,
+                    "paging": false,
+                    "ordering": false,
+                    "info": false,
+                    dom: 'Blfrtip',
+                    buttons: [
+                        {
+                            extend: 'pdf',
+                            className: 'btn btn-sm btn-danger mt-2 ml-2'
+                                },
+                        {
+                            extend: 'copy',
+                            className: 'btn btn-sm btn-dark mt-2'
+                                },
+                        {
+                            extend: 'csv',
+                            className: 'btn btn-sm btn-secondary mt-2'
+                                },
+                        {
+                            extend: 'excel',
+                            className: 'btn btn-sm btn-primary mt-2'
+                                },
+                        {
+                            extend: 'print',
+                            className: 'btn btn-sm btn-info mt-2'
+                                }
+                                ]
+                });
+            }
+        });
+    }
+
+    function modal_kc_open(e) {
+        data_type = e.getAttribute('data_filter');
+        start_date = e.getAttribute('start-date');
+        end_date = e.getAttribute('end-date');
+        emp_email = e.getAttribute('emp_email');
+        barcharts();
+        $('#loading').show();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'reporting_emp_kc_list' %}",
+            data: {
+                start_date: start_date,
+                end_date: end_date,
+                emp_email: emp_email,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (dataset) {
+                $('#loading').hide();
+                data = dataset['emp_kc_list']
+
+                $('#emp_kc_list_table_div').html('');
+                $('#emp_kc_list_table_div')
+                .append('<table class="table table-actions table-striped table-hover mb-0" id="emp_kc_list_table" data-table>' +
+                            '<thead>' +
+                                '<tr>' +
+                                    '<th>' + "#" + '</th>' +
+                                    '<th>' + "KC_Id" + '</th>' +
+                                    '<th>' + "Title" + '</th>' +
+                                    '<th>' + "Submitted_At" + '</th>' +
+                                    '<th>' + "Attempts" + '</th>' +
+                                    '<th>' + "Score" + '</th>' +
+                                    '<th>' + "Status" + '</th>' +
+                                '</tr>' +
+                            '</thead>' +
+                            '<tbody id="emp_kc_list_table_body">' + '</tbody>' +
+                        '</table>');
+
+                t = 0;
+                p = 0;
+                c = 0;
+
+                for (var i = 0; i < data.length; i++) {
+
+                    if (data_type == "completed") {
+                        if (data[i].kc_attempts != "0") {
+                            $('#emp_kc_list_table_body').append('<tr>' +
+                                '<td>' + (c + 1) + '</td>' +
+                                '<td>' + data[i].kc_id + '</td>' +
+                                '<td>' + data[i].kc_title + '</td>' +
+                                '<td>' + data[i].kc_timestamp + '</td>' +
+                                '<td>' + data[i].kc_attempts + '</td>' +
+                                '<td>' + data[i].kc_score + "%" + '</td>' +
+                                '<td>' + data[i].kc_status + '</td>' +
+                                '</tr>');
+                            c++;
+                        }
+                    } else if (data_type == "pending") {
+                        if (data[i].kc_attempts == "0") {
+                            $('#emp_kc_list_table_body').append('<tr>' +
+                                '<td>' + (p + 1) + '</td>' +
+                                '<td>' + data[i].kc_id + '</td>' +
+                                '<td>' + data[i].kc_title + '</td>' +
+                                '<td>' + "-" + '</td>' +
+                                '<td>' + data[i].kc_attempts + '</td>' +
+                                '<td>' + data[i].kc_score + "%" + '</td>' +
+                                '<td>' + "-" + '</td>' +
+                                '</tr>');
+                            p++;
+                        }
+                    } else {
+                        if(data[i].kc_attempts == 0)
+                        {
+                            $('#emp_kc_list_table_body').append('<tr>' +
+                            '<td>' + (t + 1) + '</td>' +
+                            '<td>' + data[i].kc_id + '</td>' +
+                            '<td>' + data[i].kc_title + '</td>' +
+                            '<td>' + "-" + '</td>' +
+                            '<td>' + data[i].kc_attempts + '</td>' +
+                            '<td>' + data[i].kc_score + "%" + '</td>' +
+                            '<td>' + "-" + '</td>' +
+                            '</tr>');
+                        }
+                        else
+                        {
+                            $('#emp_kc_list_table_body').append('<tr>' +
+                                '<td>' + (t + 1) + '</td>' +
+                                '<td>' + data[i].kc_id + '</td>' +
+                                '<td>' + data[i].kc_title + '</td>' +
+                                '<td>' + data[i].kc_timestamp + '</td>' +
+                                '<td>' + data[i].kc_attempts + '</td>' +
+                                '<td>' + data[i].kc_score + "%" + '</td>' +
+                                '<td>' + data[i].kc_status + '</td>' +
+                                '</tr>');
+                        }
+                        t++;
+                    }
+                }
+
+                $('#emp_kc_list_table').DataTable({
+                    retrieve: true,
+                    "searching": false,
+                    "paging": false,
+                    "ordering": false,
+                    "info": false,
+                    dom: 'Blfrtip',
+                    buttons: [
+                        {
+                            extend: 'pdf',
+                            className: 'btn btn-sm btn-danger mt-2 ml-2'
+                            },
+                        {
+                            extend: 'copy',
+                            className: 'btn btn-sm btn-dark mt-2'
+                            },
+                        {
+                            extend: 'csv',
+                            className: 'btn btn-sm btn-secondary mt-2'
+                            },
+                        {
+                            extend: 'excel',
+                            className: 'btn btn-sm btn-primary mt-2'
+                            },
+                        {
+                            extend: 'print',
+                            className: 'btn btn-sm btn-info mt-2'
+                            }
+                            ]
+                });
+            }
+        });
+    }
+
+    function modal_analytics_open(e) {
+        data_type = e.getAttribute('data_filter');
+        start_date = e.getAttribute('start-date');
+        end_date = e.getAttribute('end-date');
+        emp_email = e.getAttribute('emp_email');
+
+        $('#loading').show();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'reporting_emp_kc_list' %}",
+            data: {
+                start_date: start_date,
+                end_date: end_date,
+                emp_email: emp_email,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (dataset) {
+                $('#loading').hide();
+                data = dataset['emp_kc_list']
+
+                analytics = [];
+                kc_tests  = [];
+
+                for (var i = 0; i < data.length; i++)
+                {
+                    if (data[i].kc_attempts != "0")
+                    {
+                        kc_tests.push("Test "+(i+1));
+                        analytics.push(data[i].kc_score);
+                    }
+                }
+
+
+                barcharts(kc_tests, analytics);
+            }
+        });
+    }
+
+    $("#project_name_dd").change(function () {
+        $('#pick_date').val("");
+    });
+
+    function hideLoader() {
+        $('#loading').hide();
+    }
+
+    $(window).ready(hideLoader);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+{% load static %}
+<html lang="en">
+<head>
+    <title>Elixir Web | Logout</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="{% static 'images/favicon.png'  %}" type="image/png">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" media="screen"/>
+
+</head>
+
+<body style="background-image:
+    linear-gradient(to left, rgba(0, 0, 70, 0.5), rgba(109, 213, 250, 0.5)),
+    url({% static 'images/login_background.jpg' %}); background-position: center; background-repeat: no-repeat; background-size: cover;">
+<div class="container">
+
+    <div align="left">
+        <img style="height: 75px; margin-top:300px; margin-left:50px" src="{% static 'images/cts_logo.png' %}">
+    </div>
+
+    <div class="login">
+        <div align="center">
+            <img style="height: 150px" src="{% static 'images/logo.png' %}">
+        </div>
+        <h1>Logged Out</h1>
+        <h6 style="color: #ffffff; font-size: 15px" align="center">Thank you for using Elixir!</h6>
+        <h6 style="color: #ffffff; font-size: 15px" align="center">For security reasons, please clear your browser cache</h6>
+        <h1>
+            <a style="color: #ffffff; font-size: 15px; font-weight:400" href="/accounts/login/">Login again</a>
+        </h1>
+    </div>
+</div>
+</body>
+
+</html>
